@@ -1,17 +1,31 @@
-import * as actionType from '../constants/actionTypes';
+import * as actionType from "../constants/actionTypes";
 
-const authReducer = (state = { authData: null }, action) => {
+const authReducer = (
+  authReducer = { authData: null, loading: false },
+  action
+) => {
   switch (action.type) {
-    case actionType.AUTH:
-      localStorage.setItem('profile', JSON.stringify({ ...action?.data }));
+    case "START_LOADING":
+      return { ...authReducer, loading: true };
 
-      return { ...state, authData: action.data, loading: false, errors: null };
+    case "END_LOADING":
+      return { ...authReducer, loading: false };
+
+    case actionType.AUTH:
+      localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
+
+      return {
+        ...authReducer,
+        authData: action.data,
+        loading: false,
+        errors: null,
+      };
     case actionType.LOGOUT:
       localStorage.clear();
 
-      return { ...state, authData: null, loading: false, errors: null };
+      return { ...authReducer, authData: null, loading: false, errors: null };
     default:
-      return state;
+      return authReducer;
   }
 };
 

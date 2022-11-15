@@ -1,17 +1,22 @@
 import React, { useEffect } from "react";
-import { Paper, Typography, CircularProgress, Divider } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  CircularProgress,
+  Divider,
+  createTheme,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
 
 import { getPost, getPostsBySearch } from "../../actions/posts";
 import CommentSection from "./CommentSection";
-import useStyles from "./styles";
 
 const Post = () => {
   const { post, isLoading } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
-  const classes = useStyles();
+  const theme = createTheme();
   const { id } = useParams();
 
   useEffect(() => {
@@ -32,7 +37,18 @@ const Post = () => {
 
   if (isLoading) {
     return (
-      <Paper elevation={6} className={classes.loadingPaper}>
+      <Paper
+        elevation={6}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "20px",
+          borderRadius: "15px",
+          height: "39vh",
+          marginTop: "6rem",
+        }}
+      >
         <CircularProgress size="7em" />
       </Paper>
     );
@@ -41,9 +57,31 @@ const Post = () => {
   // const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
   return (
-    <Paper style={{ padding: "20px", borderRadius: "15px" }} elevation={6}>
-      <div className={classes.card}>
-        <div className={classes.section}>
+    <Paper
+      style={{
+        marginTop: "6rem",
+        padding: "20px",
+        borderRadius: "15px",
+      }}
+      elevation={6}
+    >
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          [theme.breakpoints.down("sm")]: {
+            flexWrap: "wrap",
+            flexDirection: "column",
+          },
+        }}
+      >
+        <div
+          style={{
+            borderRadius: "20px",
+            margin: "10px",
+            flex: 1,
+          }}
+        >
           <Typography variant="h3" component="h2">
             {post.title}
           </Typography>
@@ -82,9 +120,21 @@ const Post = () => {
           <CommentSection post={post} />
           <Divider style={{ margin: "20px 0" }} />
         </div>
-        <div className={classes.imageSection}>
+        <div
+          style={{
+            marginLeft: "20px",
+            [theme.breakpoints.down("sm")]: {
+              marginLeft: 0,
+            },
+          }}
+        >
           <img
-            className={classes.media}
+            style={{
+              borderRadius: "20px",
+              objectFit: "cover",
+              width: "100%",
+              maxHeight: "600px",
+            }}
             src={post.selectedFile}
             alt={post.title}
           />

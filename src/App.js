@@ -10,7 +10,13 @@ import { Container } from "@mui/material";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
-
+  const AuthProtected = ({ children }) => {
+    if (!user?.result) {
+      return children;
+    } else {
+      return <Redirect to="/" />;
+    }
+  };
   return (
     <BrowserRouter>
       <Container maxWidth="lg">
@@ -28,7 +34,11 @@ const App = () => {
           <Route
             path="/auth"
             exact
-            component={() => (!user ? <Auth /> : <Redirect to="/posts" />)}
+            component={() => (
+              <AuthProtected>
+                <Auth />
+              </AuthProtected>
+            )}
           />
         </Switch>
       </Container>

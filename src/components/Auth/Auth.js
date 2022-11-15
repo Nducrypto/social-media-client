@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
   Button,
@@ -8,6 +8,7 @@ import {
   Container,
   Paper,
   createTheme,
+  CircularProgress,
 } from "@mui/material";
 import { useHistory } from "react-router-dom";
 // import { GoogleLogin } from "react-google-login";
@@ -33,7 +34,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const theme = createTheme();
-
+  const { loading } = useSelector((state) => state.authReducer);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => setShowPassword(!showPassword);
@@ -103,14 +104,18 @@ const SignUp = () => {
         }}
         elevation={6}
       >
-        <Avatar
-          sx={{
-            margin: 1,
-            backgroundColor: isSignup ? "blue" : "green",
-          }}
-        >
-          <LockOutlinedIcon />
-        </Avatar>
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Avatar
+            sx={{
+              margin: 1,
+              backgroundColor: isSignup ? "blue" : "green",
+            }}
+          >
+            <LockOutlinedIcon />
+          </Avatar>
+        )}
 
         {/* SIGNUP OR SIGN IN FORM TOGGLER */}
         <Typography component="h1" variant="h5">
@@ -176,6 +181,7 @@ const SignUp = () => {
             fullWidth
             variant="contained"
             color="primary"
+            disabled={loading}
             sx={{
               margin: theme.spacing(3, 0, 2),
               marginTop: theme.spacing(3),

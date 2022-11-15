@@ -3,14 +3,12 @@ import { Typography, TextField, Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 
 import { commentPost } from "../../actions/posts";
-import useStyles from "./styles";
 
 const CommentSection = ({ post }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
   const [comment, setComment] = useState("");
   const dispatch = useDispatch();
   const [comments, setComments] = useState(post?.comments);
-  const classes = useStyles();
   const commentsRef = useRef();
 
   const handleComment = async () => {
@@ -27,7 +25,11 @@ const CommentSection = ({ post }) => {
   return (
     <div>
       {user?.result ? (
-        <div className={classes.commentsOuterContainer}>
+        <div
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
           <div style={{ width: "70%" }}>
             <Typography gutterBottom variant="h6">
               What's on your mind?
@@ -53,7 +55,13 @@ const CommentSection = ({ post }) => {
               Comment
             </Button>
           </div>
-          <div className={classes.commentsInnerContainer}>
+          <div
+            style={{
+              height: "200px",
+              overflowY: "auto",
+              marginRight: "30px",
+            }}
+          >
             <Typography gutterBottom variant="h6">
               Comments
             </Typography>

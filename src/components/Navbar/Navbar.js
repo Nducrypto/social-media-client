@@ -46,7 +46,7 @@ const Navbar = () => {
   const logout = () => {
     dispatch({ type: actionType.LOGOUT });
 
-    history.push("/auth");
+    history.push("/");
 
     setUser(null);
   };
@@ -107,7 +107,10 @@ const Navbar = () => {
           {user?.result.name}
           {user?.result && (
             <Button
-              onClick={logout}
+              onClick={() => {
+                logout();
+                setIsOpen(false);
+              }}
               variant="contained"
               sx={{
                 width: "8rem",
