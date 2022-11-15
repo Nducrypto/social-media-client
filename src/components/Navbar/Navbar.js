@@ -85,21 +85,24 @@ const Navbar = () => {
             />
           </Link>
         </span>
-        <>
-          <input
-            className="input"
-            onKeyDown={handleKeyPress}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <IconButton
-            type="submit"
-            onClick={searchPost}
-            sx={{ marginRight: { md: "18rem", sm: "3rem" } }}
-          >
-            <SearchIcon />
-          </IconButton>
-        </>
+
+        {user?.result && (
+          <>
+            <input
+              className="input"
+              onKeyDown={handleKeyPress}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <IconButton
+              type="submit"
+              onClick={searchPost}
+              sx={{ marginRight: { md: "18rem", sm: "3rem" } }}
+            >
+              <SearchIcon />
+            </IconButton>
+          </>
+        )}
         <div className={`nav-items ${isOpen && "open"}`}>
           {user?.result.name}
           {user?.result && (
@@ -117,30 +120,29 @@ const Navbar = () => {
               Logout
             </Button>
           )}
-
-          {!user?.result && (
-            <Button
-              variant="contained"
-              sx={{
-                width: "8rem",
-                height: "2rem",
-                textTransform: "lowercase",
-              }}
-              onClick={() => {
-                history.push("/auth");
-                setIsOpen(false);
-              }}
-            >
-              signin/signup
-            </Button>
-          )}
         </div>
+        {!user?.result && (
+          <Button
+            variant="contained"
+            sx={{
+              marginLeft: "7rem",
+              display: { md: "none", lg: "none", sm: "none" },
+            }}
+            onClick={() => {
+              history.push("/auth");
+              setIsOpen(false);
+            }}
+          >
+            signin
+          </Button>
+        )}
         {/* ====NAV TOGGLE BAR=== */}
         <div
           className={`nav-toggle ${isOpen && "open"}`}
           onClick={() => setIsOpen(!isOpen)}
         >
-          <div className="bar"></div>
+          {/* -====== NAV-TOGGLE ON SMALL DEVICE== */}
+          {user?.result && <div className="bar"></div>}
         </div>
       </div>
     </AppBar>
