@@ -124,12 +124,31 @@ const Navbar = () => {
             </Button>
           )}
         </div>
+
+        {/* ==== SININ SMALL DEVICE */}
         {!user?.result && (
           <Button
             variant="contained"
             sx={{
               marginLeft: "7rem",
               display: { md: "none", lg: "none", sm: "none" },
+            }}
+            onClick={() => {
+              history.push("/auth");
+              setIsOpen(false);
+            }}
+          >
+            signin
+          </Button>
+        )}
+
+        {/* ==== SININ SMALL DEVICe */}
+
+        {!user?.result && (
+          <Button
+            variant="contained"
+            sx={{
+              marginLeft: "7rem",
             }}
             onClick={() => {
               history.push("/auth");
