@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useHistory } from "react-router-dom";
 
-import { getPost, getPostsBySearch } from "../../actions/posts";
+import { getPost } from "../../actions/posts";
 import CommentSection from "./CommentSection";
 
 const Post = () => {
