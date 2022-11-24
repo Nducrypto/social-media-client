@@ -1,19 +1,34 @@
-import { AppBar, Button, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import "./Navbar.css";
-import navlogo from "../../images/navlogo.jpg";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { AiOutlineMenu } from "react-icons/ai";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
-import * as actionType from "../../constants/actionTypes";
-
+import { useHistory, useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { getPostsBySearch } from "../../actions/posts";
+// import * as actionType from "../../constants/actionTypes";
+import { useStateContext } from "../../context/ContextProvide";
+// import LogoutPrompt from "./LogoutPrompt";
 
+const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
+  <Tooltip title={title} position="BottomCenter">
+    <button
+      type="button"
+      onClick={customFunc}
+      style={{ color }}
+      className="relative text-xl rounded-full p-3"
+    >
+      <span
+        style={{ background: dotColor }}
+        className="absolute inline-flex h-2 right-2 top-2"
+      />
+      {icon}
+    </button>
+  </Tooltip>
+);
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [tags] = useState([]);
-
+  // const [tags] = useState([]);
+  const { search, setSearch, setActiveMenu, screenSize, setScreenSize } =
+    useStateContext();
   const location = useLocation();
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
@@ -31,11 +46,9 @@ const Navbar = () => {
   const searchPost = (e) => {
     e.preventDefault();
 
-    if (search.trim() || tags) {
-      dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
-      history.push(
-        `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
-      );
+    if (search.trim()) {
+      dispatch(getPostsBySearch(search));
+      history.push(`/search?searchQuery=${search || "none"}`);
       setSearch("");
     } else {
       history.push("/");
@@ -44,7 +57,7 @@ const Navbar = () => {
   };
 
   const logout = () => {
-    dispatch({ type: actionType.LOGOUT });
+    dispatch({ type: "LOGOUT" });
 
     history.push("/");
 
@@ -55,119 +68,106 @@ const Navbar = () => {
     setUser(JSON.parse(localStorage.getItem("profile")));
   }, [location]);
 
+  useEffect(() => {
+    const handleResize = () => setScreenSize(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setScreenSize]);
+
+  useEffect(() => {
+    if (screenSize <= 900) {
+      setActiveMenu(false);
+    } else {
+      setActiveMenu(true);
+    }
+  }, [setActiveMenu, screenSize]);
+
   return (
-    <AppBar
-      sx={{
-        padding: "0rem 2rem 0 0",
-        backgroundColor: "red",
-      }}
+    <div
+      style={{ backgroundColor: "darkblue" }}
+      className="flex justify-between p-2 md:mx-6 relative w-900"
     >
-      <div className="Navbar">
-        <span className="nav-logo">
-          <Link
-            to="/"
-            style={{
-              display: "flex",
-              textDecoration: "none",
-              color: "white",
-            }}
-          >
-            MABENCH
-            <img
-              style={{
-                marginLeft: "0.5rem",
-                marginTop: "3px",
-                borderRadius: "9rem",
-              }}
-              src={navlogo}
-              alt="icon"
-              height="25px"
-            />
-          </Link>
-        </span>
+      <NavButton
+        title="Menu"
+        customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
+        color="white"
+        icon={<AiOutlineMenu />}
+      />
+
+      {/* {prompt && <LogoutPrompt logout={logout} />} */}
+
+      <div className="flex">
+        {/* ======PROFILE=== */}
+        {user?.result && (
+          <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
+            {/* <img className="rounded-full w-8 h-8" alt="loading" /> */}
+            <span
+              style={{ color: "white" }}
+              className=" font-bold mr-8 text-14"
+            >
+              {user?.result.firstName} {user?.result.lastName}
+            </span>
+          </div>
+        )}
 
         {user?.result && (
           <>
             <input
-              className="input"
+              style={{
+                width: "6.5rem",
+                height: "2rem",
+                marginTop: "0.3rem",
+              }}
               onKeyDown={handleKeyPress}
+              className="placeholder:italic placeholder:text-slate-400 rounded-md py-2 pl-4 pr-3 focus:outline-none"
+              placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <IconButton
-              type="submit"
-              onClick={searchPost}
-              sx={{ marginRight: { md: "18rem", sm: "3rem" } }}
-            >
-              <SearchIcon />
+            <IconButton type="submit" onClick={searchPost}>
+              <SearchIcon sx={{ marginRight: "2rem", color: "white" }} />
             </IconButton>
           </>
         )}
-        <div className={`nav-items ${isOpen && "open"}`}>
-          {user?.result.name}
-          {user?.result && (
+        {user?.result ? (
+          <div
+            className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg"
+            // onClick={() => handleClick("userProfile")}
+          >
             <Button
+              size="small"
+              sx={{ textTransform: "capitalize", backgroundColor: "red" }}
+              variant="contained"
               onClick={() => {
                 logout();
-                setIsOpen(false);
+                //   setPrompt(true);
               }}
-              variant="contained"
-              sx={{
-                width: "8rem",
-                height: "2rem",
-                textTransform: "lowercase",
-                marginLeft: { md: "5rem", sm: "5rem" },
-                marginTop: { xs: "5rem", md: 0, sm: 0, lg: 0 },
-              }}
+              className="text-red-700 font-bold ml-1 text-14"
             >
               Logout
             </Button>
-          )}
-        </div>
-
-        {/* ==== SININ SMALL DEVICE */}
-        {!user?.result && (
-          <Button
-            variant="contained"
-            sx={{
-              marginLeft: "7rem",
-              display: { md: "none", lg: "none", sm: "none" },
-            }}
-            onClick={() => {
-              history.push("/auth");
-              setIsOpen(false);
-            }}
-          >
-            signin
-          </Button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg">
+            {/* <p> */}
+            <Button
+              size="small"
+              sx={{ textTransform: "lowerCase" }}
+              variant="contained"
+              onClick={() => {
+                history.push("/auth");
+              }}
+              className="text-gray-400 font-bold ml-1 text-14"
+            >
+              singIn
+            </Button>
+            {/* </p> */}
+          </div>
         )}
-
-        {/* ==== SININ SMALL DEVICe */}
-
-        {!user?.result && (
-          <Button
-            variant="contained"
-            sx={{
-              marginLeft: "7rem",
-            }}
-            onClick={() => {
-              history.push("/auth");
-              setIsOpen(false);
-            }}
-          >
-            signin
-          </Button>
-        )}
-        {/* ====NAV TOGGLE BAR=== */}
-        <div
-          className={`nav-toggle ${isOpen && "open"}`}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {/* -====== NAV-TOGGLE ON SMALL DEVICE== */}
-          {user?.result && <div className="bar"></div>}
-        </div>
       </div>
-    </AppBar>
+    </div>
   );
 };
 

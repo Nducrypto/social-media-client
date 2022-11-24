@@ -8,53 +8,65 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import FileBase from "react-file-base64";
-import { useHistory } from "react-router-dom";
 
 import { createPost, updatePost } from "../../actions/posts";
+import { Container } from "@mui/system";
 
-const Form = ({ currentId, setCurrentId }) => {
+const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const profilePics = user?.result.profilePics;
+  const lastName = user?.result.lastName;
+  const firstName = user?.result.firstName;
+
   const [postData, setPostData] = useState({
-    title: "",
     message: "",
-    tags: [],
     selectedFile: "",
   });
+  const creator = user?.result._id;
+
+  const { posts } = useSelector((state) => state.allPosts);
 
   //=== this is for updating of post
-  const post = useSelector((state) =>
-    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
-  );
+  const editPost = posts.find((p) => (currentId ? p._id === currentId : null));
 
   const dispatch = useDispatch();
   const theme = createTheme();
-  const user = JSON.parse(localStorage.getItem("profile"));
-  const history = useHistory();
 
   const clear = () => {
     setCurrentId(0);
-    setPostData({ title: "", message: "", tags: [], selectedFile: "" });
+    setPostData({
+      message: "",
+      selectedFile: "",
+    });
   };
 
   useEffect(() => {
-    if (post) setPostData(post);
-  }, [post]);
+    if (currentId) setPostData(editPost);
+  }, [editPost, currentId]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (currentId === 0) {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
-      history.push("/");
+      dispatch(
+        createPost({ ...postData, profilePics, firstName, lastName, creator })
+      );
       clear();
     } else {
       dispatch(
-        updatePost(currentId, { ...postData, name: user?.result?.name })
+        updatePost(currentId, {
+          ...postData,
+          profilePics,
+          firstName,
+          lastName,
+          creator,
+        })
       );
       clear();
     }
   };
 
-  if (!user?.result?.name) {
+  if (!user?.result) {
     return (
       <Paper
         sx={{
@@ -70,24 +82,20 @@ const Form = ({ currentId, setCurrentId }) => {
       >
         <Typography variant="h3" align="center">
           Happening now.
-          <Typography variant="h6">
-            Join mabench and connect with new friends.
-          </Typography>
+          <Typography>Join mabench and connect with new friends.</Typography>
         </Typography>
       </Paper>
     );
   }
 
   return (
-    <Paper
-      sx={{
+    <div
+      style={{
         padding: theme.spacing(1),
         borderRadius: "0 2rem",
-        backgroundColor: "#fffafa",
-        marginBottom: "2rem",
-        [theme.breakpoints.down("sm")]: {
-          position: "relative",
-        },
+
+        // backgroundColor: "red",
+        // backgroundColor: "#fffafa",
       }}
       elevation={6}
     >
@@ -101,36 +109,41 @@ const Form = ({ currentId, setCurrentId }) => {
         noValidate
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">
-          {currentId ? "Editing... " : "Create Something..."}
-        </Typography>
-        <TextField
-          style={{ backgroundColor: "white" }}
-          name="title"
-          variant="outlined"
-          label="Title"
-          fullWidth
-          value={postData.title}
-          onChange={(e) => setPostData({ ...postData, title: e.target.value })}
-        />
-        <TextField
-          style={{ backgroundColor: "white" }}
-          name="message"
-          variant="outlined"
-          label="Message"
-          fullWidth
-          multiline
-          rows={4}
-          value={postData.message}
-          onChange={(e) =>
-            setPostData({ ...postData, message: e.target.value })
-          }
-        />
+        <Typography variant="h6">{currentId ? "Editing... " : null}</Typography>
+        <Container style={{ display: "flex", gap: ".4rem" }}>
+          <img
+            style={{
+              height: "3rem",
+              width: "3rem",
+              borderRadius: "3rem",
+              marginTop: ".3rem",
+              marginLeft: "-2rem",
+            }}
+            src={user?.result.profilePics}
+            alt=""
+          />
+          <TextField
+            sx={{ backgroundColor: "white" }}
+            name="message"
+            variant="outlined"
+            label="Post..."
+            fullWidth
+            multiline
+            rows={clicked ? 4 : 1}
+            value={postData.message}
+            onClick={() => setClicked(true)}
+            onChange={(e) => {
+              setPostData({ ...postData, message: e.target.value });
+            }}
+          />
+        </Container>
 
         <div
           style={{
+            display: "flex",
+            justifyContent: "space-between",
             width: "97%",
-            margin: "10px 0",
+            marginTop: "0.3rem",
           }}
         >
           <FileBase
@@ -140,21 +153,24 @@ const Form = ({ currentId, setCurrentId }) => {
               setPostData({ ...postData, selectedFile: base64 })
             }
           />
+
+          <Button
+            sx={{
+              width: "10%",
+              height: "70%",
+            }}
+            variant="contained"
+            color="primary"
+            size="small"
+            type="submit"
+            fullWidth
+            onClick={() => setClicked(false)}
+          >
+            POST
+          </Button>
         </div>
-        <Button
-          sx={{
-            width: "80%",
-          }}
-          variant="contained"
-          color="primary"
-          size="large"
-          type="submit"
-          fullWidth
-        >
-          POST
-        </Button>
       </form>
-    </Paper>
+    </div>
   );
 };
 

@@ -8,37 +8,49 @@ import {
   DELETE,
   LIKE,
   COMMENT,
+  END_LOADING,
+  START_LOADING,
 } from "../constants/actionTypes";
 
-const posts = (state = { isLoading: true, posts: [] }, action) => {
+const allPosts = (
+  allPosts = {
+    isLoading: false,
+    posts: [],
+    post: {},
+    searchposts: [],
+    profileposts: [],
+  },
+  action
+) => {
   switch (action.type) {
-    case "START_LOADING":
-      return { ...state, isLoading: true };
-    case "END_LOADING":
-      return { ...state, isLoading: false };
+    case START_LOADING:
+      return { ...allPosts, isLoading: true };
+    case END_LOADING:
+      return { ...allPosts, isLoading: false };
     case FETCH_ALL:
       return {
-        ...state,
+        ...allPosts,
         posts: action.payload.data,
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
-    case FETCH_BY_SEARCH:
     case FETCH_BY_CREATOR:
-      return { ...state, posts: action.payload.data };
+      return { ...allPosts, profileposts: action.payload };
+    case FETCH_BY_SEARCH:
+      return { ...allPosts, posts: action.payload };
     case FETCH_POST:
-      return { ...state, post: action.payload.post };
+      return { ...allPosts, post: action.payload.post };
     case LIKE:
       return {
-        ...state,
-        posts: state.posts.map((post) =>
+        ...allPosts,
+        posts: allPosts.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
       };
     case COMMENT:
       return {
-        ...state,
-        posts: state.posts.map((post) => {
+        ...allPosts,
+        posts: allPosts.posts.map((post) => {
           if (post._id === action.payload._id) {
             return action.payload;
           }
@@ -46,22 +58,22 @@ const posts = (state = { isLoading: true, posts: [] }, action) => {
         }),
       };
     case CREATE:
-      return { ...state, posts: [...state.posts, action.payload] };
+      return { ...allPosts, posts: [...allPosts.posts, action.payload] };
     case UPDATE:
       return {
-        ...state,
-        posts: state.posts.map((post) =>
+        ...allPosts,
+        posts: allPosts.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
       };
     case DELETE:
       return {
-        ...state,
-        posts: state.posts.filter((post) => post._id !== action.payload),
+        ...allPosts,
+        posts: allPosts.posts.filter((post) => post._id !== action.payload),
       };
     default:
-      return state;
+      return allPosts;
   }
 };
 
-export default posts;
+export default allPosts;

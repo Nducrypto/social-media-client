@@ -14,10 +14,11 @@ import { useHistory } from "react-router-dom";
 // import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import FileBase from "react-file-base64";
 
-import Icon from "./icon";
+// import Icon from "./icon";
 import { signin, signup } from "../../actions/auth";
-import { AUTH } from "../../constants/actionTypes";
+// import { AUTH } from "../../constants/actionTypes";
 import InputAuth from "./InputAuth";
 
 const initialState = {
@@ -26,15 +27,17 @@ const initialState = {
   email: "",
   password: "",
   confirmPassword: "",
+  profilePics: "",
 };
 
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const theme = createTheme();
-  const { loading } = useSelector((state) => state.authReducer);
+  const { loading, isUserError } = useSelector((state) => state.authReducer);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => setShowPassword(!showPassword);
@@ -49,8 +52,9 @@ const SignUp = () => {
   // HANDLESUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (isSignup) {
+    if (isSignup & !form.profilePics) {
+      return setError(true);
+    } else if (isSignup) {
       dispatch(signup(form, history));
     } else {
       dispatch(signin(form, history));
@@ -69,24 +73,24 @@ const SignUp = () => {
   }, []);
 
   //  GOOGLESUCCESS
-  const googleSuccess = async (res) => {
-    console.log(res);
-    const result = res?.profileObj;
-    const token = res?.tokenId;
+  // const googleSuccess = async (res) => {
+  //   console.log(res);
+  //   const result = res?.profileObj;
+  //   const token = res?.tokenId;
 
-    try {
-      dispatch({ type: AUTH, data: { result, token } });
+  //   try {
+  //     dispatch({ type: AUTH, data: { result, token } });
 
-      history.push("/");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     history.push("/");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // GOOGLE ERROR
 
-  const googleError = () =>
-    console.log("Google Sign In was unsuccessful. Try again later");
+  // const googleError = () =>
+  //   console.log("Google Sign In was unsuccessful. Try again later");
 
   // HANDLECHANGE
   const handleChange = (e) =>
@@ -104,6 +108,9 @@ const SignUp = () => {
         }}
         elevation={6}
       >
+        <h2>{isUserError && isUserError.message}</h2>
+        <h2>{error && "Select profile Picture"}</h2>
+
         {loading ? (
           <CircularProgress />
         ) : (
@@ -134,14 +141,14 @@ const SignUp = () => {
                 <InputAuth
                   name="firstName"
                   label="First Name"
-                  handleChange={handleChange}
+                  onChange={handleChange}
                   autoFocus
                   half
                 />
                 <InputAuth
                   name="lastName"
                   label="Last Name"
-                  handleChange={handleChange}
+                  onChange={handleChange}
                   half
                 />
               </>
@@ -151,7 +158,7 @@ const SignUp = () => {
             <InputAuth
               name="email"
               label="Email Address"
-              handleChange={handleChange}
+              onChange={handleChange}
               type="email"
             />
 
@@ -159,7 +166,7 @@ const SignUp = () => {
             <InputAuth
               name="password"
               label="Password"
-              handleChange={handleChange}
+              onChange={handleChange}
               type={showPassword ? "text" : "password"}
               handleShowPassword={handleShowPassword}
             />
@@ -169,9 +176,20 @@ const SignUp = () => {
               <InputAuth
                 name="confirmPassword"
                 label="Repeat Password"
-                handleChange={handleChange}
+                onChange={handleChange}
                 type="password"
               />
+            )}
+            {isSignup && (
+              <span style={{ marginTop: "1rem" }}>
+                <FileBase
+                  type="file"
+                  multiple={false}
+                  onDone={({ base64 }) =>
+                    setForm({ ...form, profilePics: base64 })
+                  }
+                />
+              </span>
             )}
           </Grid>
 
@@ -192,7 +210,7 @@ const SignUp = () => {
           </Button>
 
           {/* GOOGLElOGIN, sign it with google  */}
-          <googleLogin
+          {/* <googleLogin
             clientId={process.env.REACT_APP_GOOGLE_LOGIN}
             render={(renderProps) => (
               <Button
@@ -213,7 +231,7 @@ const SignUp = () => {
             onSuccess={googleSuccess}
             onFailure={googleError}
             cookiePolicy="single_host_origin"
-          />
+          /> */}
 
           {/* GRID/BUTTON with SWITCHMODE, either singup or signin  */}
           <Grid container justify="flex-end">

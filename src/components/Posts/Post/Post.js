@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import {
+  Avatar,
   Button,
   Card,
   CardActions,
   CardContent,
+  CardHeader,
   CardMedia,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
-
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
@@ -25,7 +27,7 @@ const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const userId = user?.result.googleId || user?.result?._id;
+  const userId = user?.result?.googleId || user?.result?._id;
 
   const hasLikedPost = post.likes.find((like) => like === userId);
 
@@ -65,129 +67,103 @@ const Post = ({ post, setCurrentId }) => {
     );
   };
 
-  const openPost = (e) => {
-    // dispatch(getPost(post._id, history));
-
-    history.push(`/posts/${post._id}`);
+  const openPost = () => {
+    // history.push(`/${post._id}`);
+    history.push(`/${post.firstName} ${post.lastName}`, {
+      creator: post.creator,
+    });
   };
 
   return (
     <Card
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        borderRadius: "15px",
-        height: "100%",
-        position: "relative",
+        marginTop: "1.3rem",
       }}
       raised
-      elevation={7}
     >
+      <CardHeader
+        avatar={
+          <Avatar aria-label="recipe">
+            {/* <img src={user?.result.profilePics} /> */}
+            <img
+              src={post.profilePics}
+              alt="hell"
+              onClick={() => {
+                history.push(`/profile`, {
+                  creator: post.creator,
+                });
+              }}
+            />
+          </Avatar>
+        }
+        action={
+          <>
+            {user?.result?._id === post.creator && (
+              <Tooltip title="edit">
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentId(post._id);
+                  }}
+                >
+                  <MoreHorizIcon
+                    fontSize="default"
+                    sx={{
+                      "&:hover": {
+                        transitionDelay: "1",
+                        transform: "scale(1.7)",
+                      },
+                    }}
+                  />
+                </Button>
+              </Tooltip>
+            )}
+          </>
+        }
+        title={`${post.firstName} ${post.lastName}`}
+        subheader={moment(post.createdAt).fromNow()}
+      />
+
       <div
-        component="span"
-        name="test"
         style={{
           display: "block",
           textAlign: "initial",
         }}
         onClick={openPost}
       >
+        <div>
+          <CardContent>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {post.message}
+              {/* {post.message.split(" ").splice(0, 20).join(" ")}... */}
+            </Typography>
+          </CardContent>
+        </div>
         <CardMedia
           sx={{
-            height: 0,
-            paddingTop: "56.25%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             backgroundBlendMode: "darken",
           }}
+          component="img"
           image={post.selectedFile}
-          title={post.title}
+          alt=""
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            color: "white",
-          }}
-        >
-          <Typography variant="h6">{post.name}</Typography>
-          <Typography variant="body2">
-            {moment(post.createdAt).fromNow()}
-          </Typography>
-        </div>
-        {(user?.result?.googleId === post?.creator ||
-          user?.result?._id === post?.creator) && (
-          <div
-            style={{
-              position: "absolute",
-              top: "20px",
-              right: "20px",
-              color: "white",
-            }}
-            name="edit"
-          >
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentId(post._id);
-              }}
-              sx={{ color: "white" }}
-              size="small"
-            >
-              <MoreHorizIcon
-                fontSize="default"
-                sx={{
-                  "&:hover": {
-                    transitionDelay: "1",
-                    transform: "scale(1.7)",
-                  },
-                }}
-              />
-            </Button>
-          </div>
-        )}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: "20px",
-          }}
-        >
-          <Typography variant="body2" color="textSecondary" component="h2">
-            {post.tags.map((tag) => `#${tag} `)}
-          </Typography>
-        </div>
-        <Typography
-          sx={{ padding: "0 16px" }}
-          gutterBottom
-          variant="h5"
-          component="h2"
-        >
-          {post.title}
-        </Typography>
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {post.message.split(" ").splice(0, 20).join(" ")}...
-          </Typography>
-        </CardContent>
       </div>
       <CardActions
         sx={{
-          padding: "0 16px 8px 16px",
+          padding: "0 0px 0px 0px",
           display: "flex",
           justifyContent: "space-between",
         }}
       >
-        {user?.result ? (
-          <Button
-            size="small"
-            color="primary"
-            disabled={!user?.result}
-            onClick={handleLike}
-          >
-            <span
-              style={{
+        <div>
+          {user?.result && (
+            <Button
+              size="small"
+              color="primary"
+              disabled={!user?.result}
+              onClick={handleLike}
+              sx={{
                 "&:hover": {
                   transitionDelay: "1",
                   transform: "scale(1.2)",
@@ -196,25 +172,32 @@ const Post = ({ post, setCurrentId }) => {
               }}
             >
               <Likes />
-            </span>
-
-            {/* comment button in like button  */}
-            <Button onClick={openPost}>
-              <MapsUgcIcon
-                sx={{
-                  "&:hover": {
-                    transitionDelay: "1",
-                    transform: "scale(1.2)",
-                    color: "blue",
-                  },
-                }}
-              />
             </Button>
-          </Button>
-        ) : null}
-        {(user?.result?.googleId === post?.creator ||
-          user?.result?._id === post?.creator) && (
+          )}
+          {user?.result && (
+            <Tooltip title="comment">
+              <Button
+                sx={{ textTransform: "lowerCase" }}
+                size="small"
+                onClick={openPost}
+              >
+                <MapsUgcIcon
+                  sx={{
+                    "&:hover": {
+                      transitionDelay: "1",
+                      transform: "scale(1.2)",
+                      color: "blue",
+                    },
+                  }}
+                />
+                comment
+              </Button>
+            </Tooltip>
+          )}
+        </div>
+        {user?.result?._id === post?.creator && (
           <Button
+            sx={{ textTransform: "lowerCase" }}
             size="small"
             color="primary"
             onClick={() => dispatch(deletePost(post._id))}

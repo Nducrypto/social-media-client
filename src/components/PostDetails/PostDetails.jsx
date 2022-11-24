@@ -8,28 +8,28 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import { getPost, getPostsBySearch } from "../../actions/posts";
 import CommentSection from "./CommentSection";
 
 const Post = () => {
-  const { post, isLoading } = useSelector((state) => state.posts);
+  const { post, isLoading } = useSelector((state) => state.allPosts);
   const dispatch = useDispatch();
   const theme = createTheme();
   const { id } = useParams();
-
+  const history = useHistory();
   useEffect(() => {
     dispatch(getPost(id));
   }, [id, dispatch]);
 
-  useEffect(() => {
-    if (post) {
-      dispatch(
-        getPostsBySearch({ search: "none", tags: post?.tags.join(",") })
-      );
-    }
-  }, [post, dispatch]);
+  // useEffect(() => {
+  //   if (post) {
+  //     dispatch(
+  //       getPostsBySearch({ search: "none", tags: post?.tags.join(",") })
+  //     );
+  //   }
+  // }, [post, dispatch]);
 
   if (!post) return null;
 
@@ -82,35 +82,19 @@ const Post = () => {
             flex: 1,
           }}
         >
-          <Typography variant="h3" component="h2">
-            {post.title}
-          </Typography>
-          <Typography
-            gutterBottom
-            variant="h6"
-            color="textSecondary"
-            component="h2"
-          >
-            {post.tags.map((tag) => (
-              <Link
-                to={`/tags/${tag}`}
-                style={{ textDecoration: "none", color: "#3f51b5" }}
-              >
-                {` #${tag} `}
-              </Link>
-            ))}
-          </Typography>
           <Typography gutterBottom variant="body1" component="p">
             {post.message}
           </Typography>
           <Typography variant="h6">
             Created by:
-            <Link
-              to={`/creators/${post.name}`}
+            <button
+              onClick={() =>
+                history.push(`/profile`, { creator: post.creator })
+              }
               style={{ textDecoration: "none", color: "#3f51b5" }}
             >
-              {` ${post.name}`}
-            </Link>
+              {`${post.firstName} ${post.lastName}`}
+            </button>
           </Typography>
           <Typography variant="body1">
             {moment(post.createdAt).fromNow()}
@@ -136,7 +120,7 @@ const Post = () => {
               maxHeight: "600px",
             }}
             src={post.selectedFile}
-            alt={post.title}
+            alt=""
           />
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Container, Grow, Grid, Paper, createTheme } from "@mui/material";
-import {} from "react-redux";
+import { Container, Grow, Paper, createTheme } from "@mui/material";
+// import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import Posts from "../Posts/Posts";
@@ -16,38 +16,38 @@ const Home = () => {
   const searchQuery = query.get("searchQuery");
   const theme = createTheme();
   const [currentId, setCurrentId] = useState(0);
-
-  const [tags] = useState([]);
-
+  const [clicked, setClicked] = useState(false);
+  // const { isLoading } = useSelector((state) => state.posts);
   return (
     <Grow in>
-      <Container maxWidth="xl">
-        <Grid
-          container
-          justify="space-between"
-          alignItems="stretch"
-          spacing={1}
-          sx={{
-            marginTop: "6rem",
-            [theme.breakpoints.down("xs")]: {
-              flexDirection: "column-reverse",
-            },
-          }}
-        >
-          <Grid item xs={12} sm={4} md={3}>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
-          </Grid>
-          <Grid item xs={12} sm={8} md={9} lg={9}>
+      <Container
+        maxWidth="fixed"
+        sx={{
+          marginTop: { xs: "6rem", md: "2rem", sm: "5rem", lg: "3rem" },
+          [theme.breakpoints.down("xs")]: {
+            flexDirection: "column-reverse",
+          },
+        }}
+      >
+        <div>
+          <div>
+            <Form
+              clicked={clicked}
+              setClicked={setClicked}
+              currentId={currentId}
+              setCurrentId={setCurrentId}
+            />
+          </div>
+          <div>
             <Posts setCurrentId={setCurrentId} />
-          </Grid>
-          <Grid item sm={9} lg={9}>
-            {!searchQuery && !tags.length && (
+          </div>
+          <div>
+            {!searchQuery && (
               <Paper
                 sx={{
                   borderRadius: 4,
                   padding: "16px",
                   color: "black",
-                  marginLeft: "15rem",
                   [theme.breakpoints.down("sm")]: {
                     display: "none",
                   },
@@ -57,10 +57,10 @@ const Home = () => {
                 <Pagination page={page} />
               </Paper>
             )}
-          </Grid>
+          </div>
 
-          <Grid item xs={12}>
-            {!searchQuery && !tags.length && (
+          <div>
+            {!searchQuery && (
               <Paper
                 sx={{
                   backgroundColor: "white",
@@ -73,8 +73,8 @@ const Home = () => {
                 <Pagination page={page} />
               </Paper>
             )}
-          </Grid>
-        </Grid>
+          </div>
+        </div>
       </Container>
     </Grow>
   );

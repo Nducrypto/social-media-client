@@ -20,6 +20,7 @@ export const getPost = (id) => async (dispatch) => {
     const { data } = await api.fetchPost(id);
 
     dispatch({ type: FETCH_POST, payload: { post: data } });
+    dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
   }
@@ -43,13 +44,13 @@ export const getPosts = (page) => async (dispatch) => {
 };
 
 export const getPostsByCreator = (name) => async (dispatch) => {
+  // console.log(name);
+
   try {
     dispatch({ type: START_LOADING });
-    const {
-      data: { data },
-    } = await api.fetchPostsByCreator(name);
+    const { data } = await api.fetchPostsByCreator(name);
 
-    dispatch({ type: FETCH_BY_CREATOR, payload: { data } });
+    dispatch({ type: FETCH_BY_CREATOR, payload: data });
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
@@ -58,15 +59,14 @@ export const getPostsByCreator = (name) => async (dispatch) => {
 
 // USED THIS GETPOST BY SEARCH IN HOME.JS
 export const getPostsBySearch = (searchQuery) => async (dispatch) => {
+  console.log(searchQuery);
   try {
     dispatch({ type: START_LOADING });
 
-    // destructrd data here, first data is d axios call while 2nd is cos i used it in new oject wr it has a new object property
-    const {
-      data: { data },
-    } = await api.fetchPostsBySearch(searchQuery);
+    const { data } = await api.fetchPostsBySearch(searchQuery);
+    console.log(data);
 
-    dispatch({ type: FETCH_BY_SEARCH, payload: { data } });
+    dispatch({ type: FETCH_BY_SEARCH, payload: data });
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
@@ -74,14 +74,13 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
 };
 
 // dis is basically making a POST API request to our backend server sendin a (post) there  by using createPost(post)
-export const createPost = (post, history) => async (dispatch) => {
+export const createPost = (post) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
     const { data } = await api.createPost(post);
 
     dispatch({ type: CREATE, payload: data });
-
-    history.push(`/posts/${data._id}`);
+    dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
   }

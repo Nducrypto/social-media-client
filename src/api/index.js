@@ -14,14 +14,10 @@ API.interceptors.request.use((req) => {
 
 export const fetchPost = (id) => API.get(`/posts/${id}`);
 export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
-export const fetchPostsByCreator = (name) =>
-  API.get(`/posts/creator?name=${name}`);
-export const fetchPostsBySearch = (searchQuery) =>
-  API.get(
-    `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
-      searchQuery.tags
-    }`
-  );
+export const fetchPostsByCreator = (creator) =>
+  API.get(`/posts/creator?creator=${creator}`);
+export const fetchPostsBySearch = (search) =>
+  API.get(`/posts/search?searchQuery=${search}`);
 
 // dis is for creating nw post and i used it in posts.js component in actions folder
 export const createPost = (newPost) => API.post("/posts", newPost);
@@ -34,22 +30,12 @@ export const updatePost = (id, updatedPost) =>
   API.patch(`/posts/${id}`, updatedPost);
 export const deletePost = (id) => API.delete(`/posts/${id}`);
 
+// =======USERS===
 export const signIn = (formData) => API.post("/users/signin", formData);
 export const signUp = (formData) => API.post("/users/signup", formData);
 
-// ===========TESTINH
-//===== old url used b4 creatin likes
-// const url = "http://localhost:5000/posts";
-// export const fetchPosts = () => axios.get(url);
+export const fetchUsers = () => API.get("/users");
+export const fetchUser = (id) => API.get(`/users/${id}`);
 
-// export const createPost = (newPost) => axios.post(url, newPost);
-
-// export const updatePost = (id, updatedPost) =>
-//   axios.patch(`${url}/${id}`, updatedPost);
-
-// export const deletePost = (id) => axios.delete(`${url}/${id}`);
-
-// export const likePost = (id) => axios.patch(`${url}/${id}/likePost`);
-
-// export const signin = (formLogin) => axios.post("/users/signin", formLogin);
-// export const signup = (formLogin) => axios.post("/users/signup", formLogin);
+export const updateUser = (id, userUpdate) =>
+  API.put(`/users/${id}`, userUpdate);
