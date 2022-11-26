@@ -27,11 +27,12 @@ const Account = () => {
   const dispatch = useDispatch();
   const theme = createTheme();
   const history = useHistory();
-
   const { posts, isLoading } = useSelector((state) => state.allPosts);
+
   const filterPost = posts.filter((p) => p.creator === id);
 
-  const { singleUser, loading } = useSelector((state) => state.authReducer);
+  const { loading } = useSelector((state) => state.authReducer);
+
   useEffect(() => {
     JSON.parse(localStorage.getItem("profile"));
     dispatch(getUser(id));
@@ -87,93 +88,91 @@ const Account = () => {
         {loading ? (
           <CircularProgress />
         ) : (
-          singleUser?.map((p) => (
-            <div key={p._id}>
-              <div>
-                <img
-                  style={{ height: "4rem", borderRadius: "4rem" }}
-                  src={p.profilePics}
-                  alt=""
-                />
-              </div>
-              <Typography
-                sx={{
-                  fontSize: "1.5rem",
-                }}
-              >{`${p.firstName} ${p.lastName}`}</Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.3rem",
-                }}
-              >
-                {p.email}
-              </Typography>
-              <Typography sx={{ textAlign: "center", fontSize: "1.7rem" }}>
-                {p.bio}
-              </Typography>
-
-              <Container component="main" maxWidth="xs">
-                {editProfile && (
-                  <Paper
-                    elevation={6}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      padding: theme.spacing(2),
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <Grid container spacing={2}>
-                      {user?.result && (
-                        <>
-                          <InputAuth
-                            label="firstName"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                          />
-                          <InputAuth
-                            label="lastName"
-                            type="email"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                          />
-                        </>
-                      )}
-                      <InputAuth
-                        multiline
-                        rows={4}
-                        label="bio"
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                      />
-                      <FileBase
-                        type="file"
-                        multiple={false}
-                        onDone={({ base64 }) => setProfilePics(base64)}
-                      />
-
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        style={{
-                          margin: theme.spacing(3, 0, 2),
-                          marginTop: theme.spacing(3),
-                        }}
-                        onClick={() => {
-                          handleSubmit();
-                          setEditProfile(false);
-                        }}
-                      >
-                        submit
-                      </Button>
-                    </Grid>
-                  </Paper>
-                )}
-              </Container>
+          <div>
+            <div>
+              <img
+                style={{ height: "4rem", borderRadius: "4rem" }}
+                src={user?.result.profilePics}
+                alt=""
+              />
             </div>
-          ))
+            <Typography
+              sx={{
+                fontSize: "1.5rem",
+              }}
+            >{`${user?.result.firstName} ${user?.result.lastName}`}</Typography>
+            <Typography
+              sx={{
+                fontSize: "1.3rem",
+              }}
+            >
+              {user?.result.email}
+            </Typography>
+            <Typography sx={{ textAlign: "center", fontSize: "1.7rem" }}>
+              {user?.result.bio}
+            </Typography>
+
+            <Container component="main" maxWidth="xs">
+              {editProfile && (
+                <Paper
+                  elevation={6}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: theme.spacing(2),
+                    marginTop: "1rem",
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    {user?.result && (
+                      <>
+                        <InputAuth
+                          label="firstName"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                        />
+                        <InputAuth
+                          label="lastName"
+                          type="email"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
+                      </>
+                    )}
+                    <InputAuth
+                      multiline
+                      rows={4}
+                      label="bio"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                    />
+                    <FileBase
+                      type="file"
+                      multiple={false}
+                      onDone={({ base64 }) => setProfilePics(base64)}
+                    />
+
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      style={{
+                        margin: theme.spacing(3, 0, 2),
+                        marginTop: theme.spacing(3),
+                      }}
+                      onClick={() => {
+                        handleSubmit();
+                        setEditProfile(false);
+                      }}
+                    >
+                      submit
+                    </Button>
+                  </Grid>
+                </Paper>
+              )}
+            </Container>
+          </div>
         )}
       </div>
 

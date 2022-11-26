@@ -84,6 +84,7 @@ const Post = ({ post, setCurrentId }) => {
     <Card
       sx={{
         marginTop: "1.3rem",
+        // height: "28rem",
       }}
       raised
     >
@@ -121,25 +122,20 @@ const Post = ({ post, setCurrentId }) => {
         subheader={moment(post.createdAt).fromNow()}
       />
 
-      <div
-        style={{
-          display: "block",
-          textAlign: "initial",
-        }}
-        onClick={openPost}
-      >
-        <div>
-          <CardContent>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {post.message}
-              {/* {post.message.split(" ").splice(0, 20).join(" ")}... */}
-            </Typography>
-          </CardContent>
-        </div>
+      <div onClick={openPost}>
+        {/* <div> */}
+        <CardContent sx={{ marginTop: "-1rem" }}>
+          <Typography variant="body2">
+            {post.message}
+            {/* {post.message.split(" ").splice(0, 20).join(" ")}... */}
+          </Typography>
+        </CardContent>
+        {/* </div> */}
         <CardMedia
           sx={{
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             backgroundBlendMode: "darken",
+            height: { xs: "15rem", md: "25rem", lg: "35rem", sm: "26rem" },
           }}
           component="img"
           image={post.selectedFile}

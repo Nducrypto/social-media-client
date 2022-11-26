@@ -5,7 +5,7 @@ const authReducer = (
     authData: null,
     loading: false,
     allUser: [],
-    singleUser: [],
+    singleUser: {},
     isUserError: false,
   },
   action

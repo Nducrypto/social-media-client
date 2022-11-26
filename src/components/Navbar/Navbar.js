@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -31,7 +31,7 @@ const Navbar = () => {
     useStateContext();
   const location = useLocation();
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const user = JSON.parse(localStorage.getItem("profile"));
 
   const dispatch = useDispatch();
 
@@ -60,13 +60,16 @@ const Navbar = () => {
     dispatch({ type: "LOGOUT" });
 
     history.push("/");
-
-    setUser(null);
   };
-
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("profile")));
+    JSON.parse(localStorage.getItem("profile"));
   }, [location]);
+
+  // useEffect(() => {
+  //   dispatch(getUser(id));
+
+  //   setUser(JSON.parse(localStorage.getItem("profile")));
+  // }, [location]);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
