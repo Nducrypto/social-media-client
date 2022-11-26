@@ -5,6 +5,7 @@ const StateContext = createContext();
 export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [search, setSearch] = useState("");
+  const [data, setData] = useState();
 
   const [screenSize, setScreenSize] = useState(undefined);
 
@@ -21,7 +22,8 @@ export const ContextProvider = ({ children }) => {
       value={{
         activeMenu,
         setActiveMenu,
-
+        data,
+        setData,
         screenSize,
         setScreenSize,
         currentColor,

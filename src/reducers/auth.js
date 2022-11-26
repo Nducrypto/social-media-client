@@ -19,7 +19,7 @@ const authReducer = (
     case "IS_USER_ERROR":
       return { ...authReducer, isUserError: true };
     case "AUTH":
-      localStorage.setItem("profile", JSON.stringify(action?.data));
+      localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
       return {
         ...authReducer,
         authData: action.data,
@@ -48,12 +48,12 @@ const authReducer = (
       return { ...authReducer, singleUser: action.payload };
 
     case "UPDATE_USER":
-      // localStorage.setItem("profile", JSON.stringify({ ...action?.payload }));
+      localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
 
       return {
         ...authReducer,
         singleUser: authReducer.singleUser.map((p) =>
-          p._id === action.payload._id ? action?.payload : p
+          p._id === action.data._id ? action?.data : p
         ),
       };
 

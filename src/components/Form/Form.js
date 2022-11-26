@@ -14,15 +14,15 @@ import { Container } from "@mui/system";
 
 const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
-  const profilePics = user?.result.profilePics;
-  const lastName = user?.result.lastName;
-  const firstName = user?.result.firstName;
+  const profilePics = user?.result?.profilePics;
+  const lastName = user?.result?.lastName;
+  const firstName = user?.result?.firstName;
 
   const [postData, setPostData] = useState({
     message: "",
     selectedFile: "",
   });
-  const creator = user?.result._id;
+  const creator = user?.result?._id;
 
   const { posts } = useSelector((state) => state.allPosts);
 

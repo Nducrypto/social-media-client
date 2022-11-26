@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   Typography,
-  CircularProgress,
   Divider,
   createTheme,
+  LinearProgress,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -19,37 +19,56 @@ const Post = () => {
   const theme = createTheme();
   const { id } = useParams();
   const history = useHistory();
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const userId = user?.result._id;
   useEffect(() => {
     dispatch(getPost(id));
   }, [id, dispatch]);
 
-  // useEffect(() => {
-  //   if (post) {
-  //     dispatch(
-  //       getPostsBySearch({ search: "none", tags: post?.tags.join(",") })
-  //     );
-  //   }
-  // }, [post, dispatch]);
+  // ====LINEAR PROGRESS=====
+  const [progress, setProgress] = useState(0);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress === 100) {
+          return 0;
+        }
+        const diff = Math.random() * 10;
+        return Math.min(oldProgress + diff, 100);
+      });
+    }, 500);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+  // ==== END OF LINEAR PROGRESS==
+
+  const handleOpenCreatedBy = () => {
+    if (post.creator === userId) {
+      history.push("/account");
+    } else {
+      history.push(`/profile`, { post: post });
+    }
+  };
   if (!post) return null;
-
-  // const openPost = (_id) => history.push(`/posts/${_id}`);
 
   if (isLoading) {
     return (
       <Paper
         elevation={6}
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px",
-          borderRadius: "15px",
-          height: "39vh",
           marginTop: "6rem",
         }}
       >
-        <CircularProgress size="7em" />
+        <LinearProgress
+          sx={{
+            height: ".5rem",
+          }}
+          variant="determinate"
+          value={progress}
+        />
       </Paper>
     );
   }
@@ -88,9 +107,7 @@ const Post = () => {
           <Typography variant="h6">
             Created by:
             <button
-              onClick={() =>
-                history.push(`/profile`, { creator: post.creator })
-              }
+              onClick={handleOpenCreatedBy}
               style={{ textDecoration: "none", color: "#3f51b5" }}
             >
               {`${post.firstName} ${post.lastName}`}

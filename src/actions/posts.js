@@ -59,12 +59,10 @@ export const getPostsByCreator = (name) => async (dispatch) => {
 
 // USED THIS GETPOST BY SEARCH IN HOME.JS
 export const getPostsBySearch = (searchQuery) => async (dispatch) => {
-  console.log(searchQuery);
   try {
     dispatch({ type: START_LOADING });
 
     const { data } = await api.fetchPostsBySearch(searchQuery);
-    console.log(data);
 
     dispatch({ type: FETCH_BY_SEARCH, payload: data });
     dispatch({ type: END_LOADING });

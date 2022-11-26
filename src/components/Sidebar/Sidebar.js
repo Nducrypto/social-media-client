@@ -4,7 +4,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { links } from "./Links";
 import { Tooltip } from "@mui/material";
 import Auth from "../Auth/Auth";
-import { useStateContext } from "../../context/ContextProvide";
+import { useStateContext } from "../../context/ContextProvider";
 
 const Sidebar = () => {
   const { activeMenu, setActiveMenu, setColor, screenSize, currentColor } =

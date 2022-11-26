@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { applyMiddleware, compose, legacy_createStore } from "redux";
 import thunk from "redux-thunk";
-import { ContextProvider } from "./context/ContextProvide";
+import { ContextProvider } from "./context/ContextProvider";
 
 import "./index.css";
 import reducers from "./reducers";

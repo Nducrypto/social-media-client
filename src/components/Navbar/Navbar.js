@@ -6,7 +6,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { getPostsBySearch } from "../../actions/posts";
 // import * as actionType from "../../constants/actionTypes";
-import { useStateContext } from "../../context/ContextProvide";
+import { useStateContext } from "../../context/ContextProvider";
 // import LogoutPrompt from "./LogoutPrompt";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
@@ -87,7 +87,7 @@ const Navbar = () => {
   return (
     <div
       style={{ backgroundColor: "darkblue" }}
-      className="flex justify-between p-2 md:mx-6 relative w-900"
+      className="flex justify-between p-2 md:mx-6 relative"
     >
       <NavButton
         title="Menu"
@@ -102,7 +102,12 @@ const Navbar = () => {
         {/* ======PROFILE=== */}
         {user?.result && (
           <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
-            {/* <img className="rounded-full w-8 h-8" alt="loading" /> */}
+            <img
+              src={user?.result.profilePics}
+              className="rounded-full w-8 h-8"
+              alt=""
+              onClick={() => history.push("/account")}
+            />
             <span
               style={{ color: "white" }}
               className=" font-bold mr-8 text-14"
@@ -132,10 +137,7 @@ const Navbar = () => {
           </>
         )}
         {user?.result ? (
-          <div
-            className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg"
-            // onClick={() => handleClick("userProfile")}
-          >
+          <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
             <Button
               size="small"
               sx={{ textTransform: "capitalize", backgroundColor: "red" }}

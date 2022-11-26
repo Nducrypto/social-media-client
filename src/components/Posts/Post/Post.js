@@ -66,12 +66,18 @@ const Post = ({ post, setCurrentId }) => {
       </>
     );
   };
+  const handleProfile = () => {
+    if (post.creator === userId) {
+      history.push("/account");
+    } else {
+      history.push(`/${post.firstName}${post.lastName}`, {
+        post: post,
+      });
+    }
+  };
 
   const openPost = () => {
-    // history.push(`/${post._id}`);
-    history.push(`/${post.firstName} ${post.lastName}`, {
-      creator: post.creator,
-    });
+    history.push(`/post/${post._id}`);
   };
 
   return (
@@ -84,16 +90,7 @@ const Post = ({ post, setCurrentId }) => {
       <CardHeader
         avatar={
           <Avatar aria-label="recipe">
-            {/* <img src={user?.result.profilePics} /> */}
-            <img
-              src={post.profilePics}
-              alt="hell"
-              onClick={() => {
-                history.push(`/profile`, {
-                  creator: post.creator,
-                });
-              }}
-            />
+            <img src={post.profilePics} alt="hell" onClick={handleProfile} />
           </Avatar>
         }
         action={

@@ -12,11 +12,11 @@ import Account from "./components/Account/Account";
 // import { getUsers } from "./actions/auth";
 import { getPosts } from "./actions/posts";
 import { useDispatch } from "react-redux";
-import { useStateContext } from "./context/ContextProvide";
+import { useStateContext } from "./context/ContextProvider";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
-  const { activeMenu } = useStateContext();
+  const { activeMenu, data } = useStateContext();
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ const App = () => {
     JSON.parse(localStorage.getItem("profile"));
     // dispatch(getUsers());
     dispatch(getPosts());
-  }, [location, dispatch]);
+  }, [location, dispatch, data]);
 
   const AuthProtected = ({ children }) => {
     if (!user?.result) {
@@ -41,10 +41,10 @@ const App = () => {
     }
   };
   return (
-    <div className="flex relative ">
+    <div className="flex relative">
       {activeMenu ? (
         // <div className="container">
-        <div className="w-72 fixed sidebar bg-black">
+        <div className="w-72 fixed sidebar">
           <Sidebar />
         </div>
       ) : (
@@ -59,7 +59,7 @@ const App = () => {
           activeMenu ? " md:ml-72" : "flex-2"
         }`}
       >
-        <div className="fixed md:static navbar  w-full">
+        <div className="fixed md:static navbar w-full">
           <Navbar />
         </div>
         <div>
@@ -103,7 +103,7 @@ const App = () => {
               )}
             />
             <Route
-              path="/:id"
+              path="/post/:id"
               exact
               component={() => (
                 <UserProtected>
@@ -122,31 +122,6 @@ const App = () => {
         </div>
       </div>
     </div>
-    // <BrowserRouter>
-    //   <Container maxWidth="lg">
-    //     <Navbar />
-
-    //     <Switch>
-    //       <Route path="/" exact component={() => <Redirect to="/posts" />} />
-    //       <Route path="/posts" exact component={Home} />
-    //       <Route path="/posts/search" exact component={Home} />
-    //       <Route path="/posts/:id" exact component={PostDetails} />
-    //       <Route
-    //         path={["/creators/:name", "/tags/:name"]}
-    //         component={CreatorOrTag}
-    //       />
-    //       <Route
-    //         path="/auth"
-    //         exact
-    //         component={() => (
-    //           <AuthProtected>
-    //             <Auth />
-    //           </AuthProtected>
-    //         )}
-    //       />
-    //     </Switch>
-    //   </Container>
-    // </BrowserRouter>
   );
 };
 
