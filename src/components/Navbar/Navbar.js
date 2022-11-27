@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Input, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
@@ -26,7 +26,6 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   </Tooltip>
 );
 const Navbar = () => {
-  // const [tags] = useState([]);
   const { search, setSearch, setActiveMenu, screenSize, setScreenSize } =
     useStateContext();
   const location = useLocation();
@@ -88,9 +87,9 @@ const Navbar = () => {
   }, [setActiveMenu, screenSize]);
 
   return (
-    <div
+    <nav
       style={{ backgroundColor: "darkblue" }}
-      className="flex justify-between p-2 md:mx-6 relative"
+      className="flex justify-between p-2 md:mx-6 relative w-900"
     >
       <NavButton
         title="Menu"
@@ -98,81 +97,82 @@ const Navbar = () => {
         color="white"
         icon={<AiOutlineMenu />}
       />
+      {/* ======PROFILE=== */}
+      {user?.result && (
+        <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
+          <img
+            src={user?.result.profilePics}
+            className="rounded-full w-8 h-8"
+            alt=""
+            onClick={() => history.push("/account")}
+          />
+          <span style={{ color: "white" }} className=" font-bold mr-8 text-14">
+            {user?.result.firstName} {user?.result.lastName}
+          </span>
+        </div>
+      )}
+      <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
+        <Input
+          sx={{
+            width: { xs: "6rem", md: "15rem", lg: "15rem", sm: "12rem" },
+            height: "2rem",
+            marginTop: "0.3rem",
+            backgroundColor: "white",
+          }}
+          onKeyDown={handleKeyPress}
+          className="placeholder:italic placeholder:text-slate-400 rounded-md py-2 pl-4 pr-3 focus:outline-none"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <IconButton
+          type="submit"
+          onClick={searchPost}
+          sx={{
+            color: "white",
+          }}
+        >
+          <SearchIcon />
+        </IconButton>
+      </div>
 
       {/* {prompt && <LogoutPrompt logout={logout} />} */}
 
-      <div className="flex">
-        {/* ======PROFILE=== */}
-        {user?.result && (
-          <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
-            <img
-              src={user?.result.profilePics}
-              className="rounded-full w-8 h-8"
-              alt=""
-              onClick={() => history.push("/account")}
-            />
-            <span
-              style={{ color: "white" }}
-              className=" font-bold mr-8 text-14"
-            >
-              {user?.result.firstName} {user?.result.lastName}
-            </span>
-          </div>
-        )}
-
-        {user?.result && (
-          <>
-            <input
-              style={{
-                width: "6.5rem",
-                height: "2rem",
-                marginTop: "0.3rem",
-              }}
-              onKeyDown={handleKeyPress}
-              className="placeholder:italic placeholder:text-slate-400 rounded-md py-2 pl-4 pr-3 focus:outline-none"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <IconButton type="submit" onClick={searchPost}>
-              <SearchIcon sx={{ marginRight: "2rem", color: "white" }} />
-            </IconButton>
-          </>
-        )}
-        {user?.result ? (
-          <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
-            <Button
-              size="small"
-              sx={{ textTransform: "capitalize", backgroundColor: "red" }}
-              variant="contained"
-              onClick={() => {
-                logout();
-                //   setPrompt(true);
-              }}
-              className="text-red-700 font-bold ml-1 text-14"
-            >
-              Logout
-            </Button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg">
-            {/* <p> */}
-            <Button
-              size="small"
-              sx={{ textTransform: "lowerCase" }}
-              variant="contained"
-              onClick={() => {
-                history.push("/auth");
-              }}
-              className="text-gray-400 font-bold ml-1 text-14"
-            >
-              singIn
-            </Button>
-            {/* </p> */}
-          </div>
-        )}
-      </div>
-    </div>
+      {user?.result ? (
+        <div className="flex gap-2 items-center cursor-pointer p-1  secondary-dark-bg rounded-lg">
+          <Button
+            size="small"
+            sx={{
+              textTransform: "capitalize",
+              backgroundColor: "red",
+            }}
+            variant="contained"
+            onClick={() => {
+              logout();
+              //   setPrompt(true);
+            }}
+            className="text-red-700 font-bold ml-1 text-14"
+          >
+            Logout
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 cursor-pointer p-1  rounded-lg">
+          {/* <p> */}
+          <Button
+            size="small"
+            sx={{ textTransform: "lowerCase", marginLeft: "-1rem" }}
+            variant="contained"
+            onClick={() => {
+              history.push("/auth");
+            }}
+            className="text-gray-400 font-bold ml-1 text-14"
+          >
+            singIn
+          </Button>
+        </div>
+      )}
+    </nav>
   );
 };
 
