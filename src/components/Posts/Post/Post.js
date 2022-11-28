@@ -27,12 +27,14 @@ const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const userId = user?.result?.googleId || user?.result?._id;
+  const userId = user?.result?._id;
+  const isAdmin = user?.result?.isAdmin;
 
   const hasLikedPost = post.likes.find((like) => like === userId);
+  // const token = user?.result._id;
 
   const handleLike = async () => {
-    dispatch(likePost(post._id));
+    dispatch(likePost(post._id, { userId }));
 
     if (hasLikedPost) {
       setLikes(post.likes.filter((id) => id !== userId));
@@ -47,9 +49,13 @@ const Post = ({ post, setCurrentId }) => {
         <>
           <FavoriteIcon fontSize="medium" />
           &nbsp;
-          {likes.length > 2
-            ? `You and ${likes.length - 1} others`
-            : `${likes.length} like${likes.length > 1 ? "s" : ""}`}
+          {likes.length > 2 ? (
+            <span style={{ fontSize: "0.8rem", textTransform: "capitalize" }}>
+              You and {likes.length - 1} others
+            </span>
+          ) : (
+            `${likes.length} like${likes.length > 1 ? "s" : ""}`
+          )}
         </>
       ) : (
         <>
@@ -188,7 +194,7 @@ const Post = ({ post, setCurrentId }) => {
             </Tooltip>
           )}
         </div>
-        {user?.result?._id === post?.creator && (
+        {user?.result?._id === post?.creator || isAdmin ? (
           <Button
             sx={{ textTransform: "lowerCase" }}
             size="small"
@@ -204,10 +210,9 @@ const Post = ({ post, setCurrentId }) => {
                 },
               }}
               fontSize="small"
-            />{" "}
-            &nbsp; Delete
+            />
           </Button>
-        )}
+        ) : null}
       </CardActions>
     </Card>
   );

@@ -95,12 +95,10 @@ export const updatePost = (id, post) => async (dispatch) => {
   }
 };
 
-export const likePost = (id) => async (dispatch) => {
-  const user = JSON.parse(localStorage.getItem("profile"));
-
+export const likePost = (id, userId) => async (dispatch) => {
   try {
     // const { data } = await api.likePost(id); //dis will return d updated post
-    const { data } = await api.likePost(id, user?.token);
+    const { data } = await api.likePost(id, userId);
 
     dispatch({ type: LIKE, payload: data });
   } catch (error) {
@@ -130,15 +128,3 @@ export const deletePost = (id) => async (dispatch) => {
     console.log(error);
   }
 };
-
-// and remember we have to dispatch an action and i dispatch d action in Form.js by using useDispatch
-
-// FOR EXPENSE TRACKER
-// export const getPosts = () => async (dispatch) => {
-//   try {
-//     const { data } = await api.fetchPosts(); //dis wil fetch d data 4rm backend
-//     dispatch({ type: FETCH_ALL, payload: data }); //dis wil dispatch an action 4rm d data 4rm  BACKEND
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

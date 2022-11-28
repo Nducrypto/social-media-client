@@ -21,7 +21,8 @@ export const fetchPostsBySearch = (search) =>
 
 // dis is for creating nw post and i used it in posts.js component in actions folder
 export const createPost = (newPost) => API.post("/posts", newPost);
-export const likePost = (id) => API.patch(`/posts/${id}/likePost`);
+export const likePost = (id, userId) =>
+  API.patch(`/posts/likePost/${id}`, userId);
 export const comment = (value, id) =>
   API.post(`/posts/${id}/commentPost`, { value });
 

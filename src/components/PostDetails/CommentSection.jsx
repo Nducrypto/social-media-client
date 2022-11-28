@@ -13,7 +13,10 @@ const CommentSection = ({ post }) => {
 
   const handleComment = async () => {
     const newComments = await dispatch(
-      commentPost(`${user?.result?.name}: ${comment}`, post._id)
+      commentPost(
+        `${user?.result?.firstName} ${user?.result?.lastName}: ${comment}`,
+        post._id
+      )
     );
 
     setComment("");
@@ -59,6 +62,7 @@ const CommentSection = ({ post }) => {
             style={{
               height: "200px",
               overflowY: "auto",
+
               marginRight: "30px",
             }}
           >
