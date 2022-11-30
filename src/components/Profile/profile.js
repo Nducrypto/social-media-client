@@ -13,6 +13,7 @@ const Profile = () => {
 
   const location = useLocation();
   const post = location.state.post;
+  console.log(post);
   useEffect(() => {
     dispatch(getPostsByCreator(post.creator));
   }, [dispatch, post]);

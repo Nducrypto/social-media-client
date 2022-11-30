@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
-import { Switch, Route, Redirect, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
+import {
+  Navbar,
+  PostDetails,
+  Sidebar,
+  Home,
+  Profile,
+  Account,
+  Auth,
+  Faq,
+} from "./components";
 
-import PostDetails from "./components/PostDetails/PostDetails";
-import Navbar from "./components/Navbar/Navbar";
-import Home from "./components/Home/Home";
-import Auth from "./components/Auth/Auth";
-import Profile from "./components/Profile/profile";
-import Sidebar from "./components/Sidebar/Sidebar";
-import Account from "./components/Account/Account";
-// import { getUsers } from "./actions/auth";
 import { getPosts } from "./actions/posts";
 import { useDispatch } from "react-redux";
 import { useStateContext } from "./context/ContextProvider";
@@ -30,14 +32,14 @@ const App = () => {
     if (!user?.result) {
       return children;
     } else {
-      return <Redirect to="/" />;
+      return <Navigate to="/" />;
     }
   };
   const UserProtected = ({ children }) => {
     if (user?.result) {
       return children;
     } else {
-      return <Redirect to="/" />;
+      return <Navigate to="/" />;
     }
   };
   return (
@@ -63,62 +65,60 @@ const App = () => {
           <Navbar />
         </div>
         <div>
-          <Switch>
-            <Route path="/" exact component={Home} />
+          <Routes>
+            <Route path="/" element={<Home />} />
             <Route
               path="/account"
-              exact
-              component={() => (
+              element={
                 <UserProtected>
                   <Account />
                 </UserProtected>
-              )}
+              }
             />
 
             <Route
               path="/search"
-              exact
-              component={() => (
+              element={
                 <UserProtected>
                   <Home />
                 </UserProtected>
-              )}
+              }
             />
             <Route
               path="/auth"
-              exact
-              component={() => (
+              element={
                 <AuthProtected>
                   <Auth />
                 </AuthProtected>
-              )}
+              }
+            />
+            <Route
+              path="/faq"
+              element={
+                <UserProtected>
+                  <Faq />
+                </UserProtected>
+              }
             />
             <Route
               path="/:firstName:lastName"
-              exact
-              component={() => (
+              element={
                 <UserProtected>
                   <Profile />
                 </UserProtected>
-              )}
+              }
             />
             <Route
               path="/post/:id"
-              exact
-              component={() => (
+              element={
                 <UserProtected>
                   <PostDetails />
                 </UserProtected>
-              )}
+              }
             />
 
-            {/* <Route
-              path={["/creators/:name", "/ndu/:name"]}
-              component={CreatorOrTag}
-            /> */}
-
-            <Route path="*" exact component={() => <Redirect to="/" />} />
-          </Switch>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
         </div>
       </div>
     </div>

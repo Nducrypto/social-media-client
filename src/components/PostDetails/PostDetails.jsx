@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { getPost } from "../../actions/posts";
 import CommentSection from "./CommentSection";
@@ -18,7 +18,8 @@ const Post = () => {
   const dispatch = useDispatch();
   const theme = createTheme();
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem("profile"));
   const userId = user?.result._id;
   useEffect(() => {
@@ -47,9 +48,9 @@ const Post = () => {
 
   const handleOpenCreatedBy = () => {
     if (post.creator === userId) {
-      history.push("/account");
+      navigate("/account");
     } else {
-      history.push(`/profile`, { post: post });
+      navigate(`/profile`, { state: { post: post } });
     }
   };
   if (!post) return null;

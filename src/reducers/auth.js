@@ -1,4 +1,4 @@
-// import * as actionType from "../constants/actionTypes";
+import { AUTH } from "../constants/actionTypes";
 
 const authReducer = (
   authReducer = {
@@ -18,7 +18,7 @@ const authReducer = (
       return { ...authReducer, loading: false };
     case "IS_USER_ERROR":
       return { ...authReducer, isUserError: true };
-    case "AUTH":
+    case AUTH:
       localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
       return {
         ...authReducer,
@@ -57,17 +57,6 @@ const authReducer = (
         ),
       };
 
-    // case actionType.AUTH:
-    //   localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
-
-    //   return {
-    //     ...authReducer,
-    //     authData: action.data,
-    //   };
-    // case actionType.LOGOUT:
-    //   localStorage.clear();
-
-    //   return { ...authReducer, authData: null, loading: false, errors: null };
     default:
       return authReducer;
   }

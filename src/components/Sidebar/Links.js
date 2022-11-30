@@ -1,10 +1,14 @@
 export const links = [
   {
-    title: "home",
+    title: "Home",
     url: "",
   },
   {
     title: "Account",
     url: "account",
+  },
+  {
+    title: "FAQ",
+    url: "faq",
   },
 ];

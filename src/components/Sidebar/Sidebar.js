@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { MdOutlineCancel } from "react-icons/md";
 import { links } from "./Links";
@@ -7,8 +7,14 @@ import Auth from "../Auth/Auth";
 import { useStateContext } from "../../context/ContextProvider";
 
 const Sidebar = () => {
-  const { activeMenu, setActiveMenu, setColor, screenSize, currentColor } =
-    useStateContext();
+  const {
+    activeMenu,
+    setActiveMenu,
+    setCurrentColor,
+    screenSize,
+    currentColor,
+  } = useStateContext();
+
   const user = JSON.parse(localStorage.getItem("profile"));
   const handleCloseSidebar = () => {
     if (activeMenu && screenSize <= 500) {
@@ -16,11 +22,29 @@ const Sidebar = () => {
     }
   };
 
-  const activeLink =
-    "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-md m-2";
+  const color = localStorage.getItem("color");
 
-  const normalLink =
-    "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-md hover:bg-secondary-dark-bg m-2";
+  useEffect(() => {
+    if (color) {
+      setCurrentColor(color);
+    }
+  }, [color, setCurrentColor]);
+
+  const handleBackgroundColor = (item) => {
+    if ((item === currentColor) & (item === "Home")) {
+      return "orange";
+    } else if ((item === currentColor) & (item === "Account")) {
+      return "orange";
+    } else if ((item === currentColor) & (item === "FAQ")) {
+      return "orange";
+    } else {
+      return "darkgrey";
+    }
+  };
+
+  const activeLink = "flex  pl-4 rounded-lg text-md m-2";
+
+  const normalLink = "flex  pl-4 rounded-lg   hover:bg-secondary-dark-bg m-2";
 
   return (
     <>
@@ -76,20 +100,19 @@ const Sidebar = () => {
                       to={`/${item.url}`}
                       key={i}
                       onClick={() => {
-                        setColor(currentColor);
                         handleCloseSidebar(true);
+                        localStorage.setItem("color", item.title);
                       }}
                       className={({ isActive }) =>
                         isActive ? activeLink : normalLink
                       }
-                      style={({ isActive }) => ({
-                        backgroundColor: isActive ? currentColor : "",
-                        // color: "white",
-                      })}
+                      style={{
+                        backgroundColor: handleBackgroundColor(item.title),
+                      }}
                     >
                       <p
-                        style={{ color: "white" }}
-                        className="m-3 mt-4 uppercase"
+                        style={{ color: "black" }}
+                        className="m-3 mt-4 capitalize"
                       >
                         {item.title}
                       </p>

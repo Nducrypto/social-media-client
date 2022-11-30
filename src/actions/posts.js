@@ -44,8 +44,6 @@ export const getPosts = (page) => async (dispatch) => {
 };
 
 export const getPostsByCreator = (name) => async (dispatch) => {
-  // console.log(name);
-
   try {
     dispatch({ type: START_LOADING });
     const { data } = await api.fetchPostsByCreator(name);
@@ -57,7 +55,6 @@ export const getPostsByCreator = (name) => async (dispatch) => {
   }
 };
 
-// USED THIS GETPOST BY SEARCH IN HOME.JS
 export const getPostsBySearch = (searchQuery) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
@@ -71,7 +68,6 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
   }
 };
 
-// dis is basically making a POST API request to our backend server sendin a (post) there  by using createPost(post)
 export const createPost = (post) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
@@ -84,7 +80,6 @@ export const createPost = (post) => async (dispatch) => {
   }
 };
 
-//  d post inside (id, post) is d overal post so remba to alwys cal it, used it in createpost above too
 export const updatePost = (id, post) => async (dispatch) => {
   try {
     const { data } = await api.updatePost(id, post);
@@ -97,7 +92,6 @@ export const updatePost = (id, post) => async (dispatch) => {
 
 export const likePost = (id, userId) => async (dispatch) => {
   try {
-    // const { data } = await api.likePost(id); //dis will return d updated post
     const { data } = await api.likePost(id, userId);
 
     dispatch({ type: LIKE, payload: data });
@@ -118,7 +112,6 @@ export const commentPost = (value, id) => async (dispatch) => {
   }
 };
 
-// didnt do const {data} here cos am not interested in d return, we jst wana delete it
 export const deletePost = (id) => async (dispatch) => {
   try {
     await await api.deletePost(id);

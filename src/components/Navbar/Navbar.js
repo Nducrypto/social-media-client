@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Button, IconButton, Input, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { getPostsBySearch } from "../../actions/posts";
 // import * as actionType from "../../constants/actionTypes";
@@ -34,7 +34,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
@@ -47,10 +47,10 @@ const Navbar = () => {
 
     if (search.trim()) {
       dispatch(getPostsBySearch(search));
-      history.push(`/search?searchQuery=${search || "none"}`);
+      navigate(`/search?searchQuery=${search || "none"}`);
       setSearch("");
     } else {
-      history.push("/");
+      navigate("/");
       setSearch("");
     }
   };
@@ -58,7 +58,7 @@ const Navbar = () => {
   const logout = () => {
     dispatch({ type: "LOGOUT" });
 
-    history.push("/");
+    navigate("/");
   };
   useEffect(() => {
     JSON.parse(localStorage.getItem("profile"));
@@ -104,7 +104,7 @@ const Navbar = () => {
             src={user?.result.profilePics}
             className="rounded-full w-8 h-8"
             alt=""
-            onClick={() => history.push("/account")}
+            onClick={() => navigate("/account")}
           />
           <span style={{ color: "white" }} className=" font-bold mr-8 text-14">
             {user?.result.firstName} {user?.result.lastName}
@@ -164,7 +164,7 @@ const Navbar = () => {
             sx={{ textTransform: "lowerCase", marginLeft: "-1rem" }}
             variant="contained"
             onClick={() => {
-              history.push("/auth");
+              navigate("/auth");
             }}
             className="text-gray-400 font-bold ml-1 text-14"
           >

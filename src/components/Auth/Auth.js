@@ -10,7 +10,7 @@ import {
   createTheme,
   CircularProgress,
 } from "@mui/material";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -35,7 +35,7 @@ const SignUp = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = createTheme();
   const { loading, isUserError } = useSelector((state) => state.authReducer);
   const [showPassword, setShowPassword] = useState(false);
@@ -55,9 +55,9 @@ const SignUp = () => {
     if (isSignup & !form.profilePics) {
       return setError(true);
     } else if (isSignup) {
-      dispatch(signup(form, history));
+      dispatch(signup(form, navigate));
     } else {
-      dispatch(signin(form, history));
+      dispatch(signin(form, navigate));
     }
   };
 

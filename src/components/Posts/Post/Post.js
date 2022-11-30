@@ -15,7 +15,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import MapsUgcIcon from "@mui/icons-material/MapsUgc";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { likePost, deletePost } from "../../../actions/posts";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -25,7 +25,7 @@ const Post = ({ post, setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
   const [likes, setLikes] = useState(post?.likes);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const userId = user?.result?._id;
   const isAdmin = user?.result?.isAdmin;
@@ -74,16 +74,18 @@ const Post = ({ post, setCurrentId }) => {
   };
   const handleProfile = () => {
     if (post.creator === userId) {
-      history.push("/account");
+      navigate("/account");
     } else {
-      history.push(`/${post.firstName}${post.lastName}`, {
-        post: post,
+      navigate(`/${post.firstName}${post.lastName}`, {
+        state: {
+          post: post,
+        },
       });
     }
   };
 
   const openPost = () => {
-    history.push(`/post/${post._id}`);
+    navigate(`/post/${post._id}`);
   };
 
   return (

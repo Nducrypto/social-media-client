@@ -9,7 +9,7 @@ export const ContextProvider = ({ children }) => {
 
   const [screenSize, setScreenSize] = useState(undefined);
 
-  const [currentColor, setCurrentColor] = useState("#03C907");
+  const [currentColor, setCurrentColor] = useState("");
 
   const setColor = (color) => {
     setCurrentColor(color);
@@ -27,6 +27,7 @@ export const ContextProvider = ({ children }) => {
         screenSize,
         setScreenSize,
         currentColor,
+        setCurrentColor,
         setColor,
         search,
         setSearch,

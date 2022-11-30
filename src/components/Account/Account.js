@@ -13,7 +13,7 @@ import { getUser, updateUser } from "../../actions/auth";
 import InputAuth from "../Auth/InputAuth";
 import FileBase from "react-file-base64";
 import Post from "../Posts/Post/Post";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Account = () => {
   const [firstName, setFirstName] = useState("");
@@ -26,7 +26,7 @@ const Account = () => {
   const id = user?.result?._id;
   const dispatch = useDispatch();
   const theme = createTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { posts, isLoading } = useSelector((state) => state.allPosts);
 
   const filterPost = posts.filter((p) => p.creator === id);
@@ -48,7 +48,7 @@ const Account = () => {
           lastName,
           profilePics,
         },
-        history
+        navigate
       )
     );
     setBio("");

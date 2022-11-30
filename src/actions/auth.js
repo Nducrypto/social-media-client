@@ -1,31 +1,31 @@
-// import { AUTH } from "../constants/actionTypes";
+import { AUTH } from "../constants/actionTypes";
 
 import * as api from "../api/index.js";
 
 //   SIGNIN
-export const signin = (formData, router) => async (dispatch) => {
+export const signin = (formData, navigate) => async (dispatch) => {
   try {
     dispatch({ type: "LOADING_START" });
     const { data } = await api.signIn(formData);
-    dispatch({ type: "AUTH", data });
+    dispatch({ type: AUTH, data });
     dispatch({ type: "LOADING_END" });
-    router.push("/");
+    navigate("/");
   } catch (err) {
     dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
   }
 };
 
 //  SIGNUP
-export const signup = (formData, router) => async (dispatch) => {
+export const signup = (formData, navigate) => async (dispatch) => {
   try {
     dispatch({ type: "LOADING_START" });
 
     const { data } = await api.signUp(formData);
 
-    dispatch({ type: "AUTH", data });
+    dispatch({ type: AUTH, data });
     dispatch({ type: "LOADING_END" });
 
-    router.push("/");
+    navigate("/");
   } catch (err) {
     dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
   }
@@ -36,7 +36,6 @@ export const getUsers = () => async (dispatch) => {
     const { data } = await api.fetchUsers();
 
     dispatch({ type: "FETCH_USERS", payload: data });
-    // dispatch({ type: "LOADING_FALSE" });
   } catch (err) {
     dispatch({ type: "IS_USER_ERROR", payload: err.response.data.message });
   }
@@ -52,7 +51,7 @@ export const getUser = (id) => async (dispatch) => {
   }
 };
 
-export const updateUser = (id, update, history) => async (dispatch) => {
+export const updateUser = (id, update, navigate) => async (dispatch) => {
   try {
     dispatch({ type: "LOADING_START" });
 
@@ -61,7 +60,7 @@ export const updateUser = (id, update, history) => async (dispatch) => {
     dispatch({ type: "UPDATE_USER", data });
 
     dispatch({ type: "LOADING_END" });
-    history.push("/");
+    navigate("/");
   } catch (err) {
     dispatch({ type: "IS_USER_ERROR", payload: err.response.data.message });
   }
