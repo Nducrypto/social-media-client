@@ -67,14 +67,8 @@ export const updateUser = (id, update, navigate) => async (dispatch) => {
 };
 export const changePassword = (id, passwordbody) => async (dispatch) => {
   try {
-    // dispatch({ type: "LOADING_START" });
-
     const { data } = await api.changePassword(id, passwordbody);
-    console.log(data);
     dispatch({ type: "CHANGE_PASSWORD", payload: data });
-
-    // dispatch({ type: "LOADING_END" });
-    // navigate("/");
   } catch (err) {
     dispatch({ type: "IS_USER_ERROR", payload: err.message });
   }
