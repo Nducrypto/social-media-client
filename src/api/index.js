@@ -40,3 +40,6 @@ export const fetchUser = (id) => API.get(`/users/${id}`);
 
 export const updateUser = (id, userUpdate) =>
   API.patch(`/users/${id}`, userUpdate);
+
+export const changePassword = (id, passwordbody) =>
+  API.patch(`/users/find/${id}`, passwordbody);

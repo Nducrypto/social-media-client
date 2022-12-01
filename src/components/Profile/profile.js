@@ -12,8 +12,10 @@ const Profile = () => {
   const { profileposts, isLoading } = useSelector((state) => state.allPosts);
 
   const location = useLocation();
+
+  // PUSHED THIS post.location from posts an profileDetails
   const post = location.state.post;
-  console.log(post);
+
   useEffect(() => {
     dispatch(getPostsByCreator(post.creator));
   }, [dispatch, post]);

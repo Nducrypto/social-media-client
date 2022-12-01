@@ -56,6 +56,11 @@ const authReducer = (
           p._id === action.data._id ? action?.data : p
         ),
       };
+    case "CHANGE_PASSWORD":
+      return {
+        ...authReducer,
+        singleUser: action.payload,
+      };
 
     default:
       return authReducer;

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getUser, updateUser } from "../../actions/auth";
+import { getUser, updateUser, changePassword } from "../../actions/auth";
 import InputAuth from "../Auth/InputAuth";
 import FileBase from "react-file-base64";
 import Post from "../Posts/Post/Post";
@@ -20,6 +20,8 @@ const Account = () => {
   const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
   const [profilePics, setProfilePics] = useState("");
+  const [password, setPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [editProfile, setEditProfile] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -38,6 +40,7 @@ const Account = () => {
     dispatch(getUser(id));
   }, [dispatch, id]);
 
+  // === HANDLEUPDATEUSER
   const handleSubmit = () => {
     dispatch(
       updateUser(
@@ -55,6 +58,18 @@ const Account = () => {
     setFirstName("");
     setLastName("");
     setProfilePics("");
+  };
+
+  //  =====HANDLECHANGEPASSWORD
+  const handleChangePassword = () => {
+    dispatch(
+      changePassword(id, {
+        oldPassword,
+        password,
+      })
+    );
+    setPassword("");
+    setOldPassword("");
   };
 
   return (
@@ -152,7 +167,6 @@ const Account = () => {
                       multiple={false}
                       onDone={({ base64 }) => setProfilePics(base64)}
                     />
-
                     <Button
                       fullWidth
                       variant="contained"
@@ -168,6 +182,27 @@ const Account = () => {
                     >
                       submit
                     </Button>
+                    <div>Change Password</div>
+                    <div style={{ marginRight: "3rem" }}>
+                      <InputAuth
+                        label="oldPassword"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                      />
+                      <InputAuth
+                        label="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+
+                      <Button
+                        style={{ marginTop: "1rem" }}
+                        variant="contained"
+                        onClick={handleChangePassword}
+                      >
+                        submit
+                      </Button>
+                    </div>
                   </Grid>
                 </Paper>
               )}
@@ -176,8 +211,13 @@ const Account = () => {
         )}
       </div>
 
+      {/* =====USER POST */}
       <div style={{ marginTop: "4rem" }}>
-        {isLoading ? (
+        {!filterPost.length && !isLoading ? (
+          <div style={{ fontSize: "2rem", textAlign: "center" }}>
+            No Post Created By You
+          </div>
+        ) : isLoading ? (
           <div
             style={{
               display: "flex",

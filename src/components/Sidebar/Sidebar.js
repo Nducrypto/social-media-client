@@ -22,14 +22,18 @@ const Sidebar = () => {
     }
   };
 
+  // === getting sidebar links color from localStorage
   const color = localStorage.getItem("color");
 
   useEffect(() => {
     if (color) {
       setCurrentColor(color);
+    } else {
+      setCurrentColor("");
     }
   }, [color, setCurrentColor]);
 
+  // ====BACKGROUNDCOLOR
   const handleBackgroundColor = (item) => {
     if ((item === currentColor) & (item === "Home")) {
       return "orange";
