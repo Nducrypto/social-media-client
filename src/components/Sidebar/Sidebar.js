@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdOutlineCancel } from "react-icons/md";
 import { links } from "./Links";
 import { Tooltip } from "@mui/material";
@@ -7,13 +7,8 @@ import Auth from "../Auth/Auth";
 import { useStateContext } from "../../context/ContextProvider";
 
 const Sidebar = () => {
-  const {
-    activeMenu,
-    setActiveMenu,
-    setCurrentColor,
-    screenSize,
-    currentColor,
-  } = useStateContext();
+  const { activeMenu, setActiveMenu, screenSize } = useStateContext();
+  const location = useLocation();
 
   const user = JSON.parse(localStorage.getItem("profile"));
   const handleCloseSidebar = () => {
@@ -22,29 +17,31 @@ const Sidebar = () => {
     }
   };
 
-  // === getting sidebar links color from localStorage
-  const color = localStorage.getItem("color");
-
-  useEffect(() => {
-    if (color) {
-      setCurrentColor(color);
-    } else {
-      setCurrentColor("");
-    }
-  }, [color, setCurrentColor]);
-
   // ====BACKGROUNDCOLOR
   const handleBackgroundColor = (item) => {
-    if ((item === currentColor) & (item === "Home")) {
+    if ((location.pathname === "/") & (item === "Home")) {
       return "orange";
-    } else if ((item === currentColor) & (item === "Account")) {
+    } else if ((location.pathname === "/account") & (item === "Account")) {
       return "orange";
-    } else if ((item === currentColor) & (item === "FAQ")) {
+    } else if ((location.pathname === "/faq") & (item === "FAQ")) {
       return "orange";
     } else {
       return "darkgrey";
     }
   };
+
+  // ====BACKGROUNDCOLOR
+  // const handleBackgroundColor = (item) => {
+  //   if ((item & currentColor) & (item === "Home")) {
+  //     return "orange";
+  //   } else if ((item === currentColor) & (item === "Account")) {
+  //     return "orange";
+  //   } else if ((item === currentColor) & (item === "FAQ")) {
+  //     return "orange";
+  //   } else {
+  //     return "darkgrey";
+  //   }
+  // };
 
   const activeLink = "flex  pl-4 rounded-lg text-md m-2";
 
@@ -105,7 +102,6 @@ const Sidebar = () => {
                       key={i}
                       onClick={() => {
                         handleCloseSidebar(true);
-                        localStorage.setItem("color", item.title);
                       }}
                       className={({ isActive }) =>
                         isActive ? activeLink : normalLink

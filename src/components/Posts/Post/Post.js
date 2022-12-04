@@ -89,13 +89,7 @@ const Post = ({ post, setCurrentId }) => {
   };
 
   return (
-    <Card
-      sx={{
-        marginTop: "1.3rem",
-        // height: "28rem",
-      }}
-      raised
-    >
+    <Card style={{ marginTop: "-0.7rem" }} raised>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe">

@@ -5,10 +5,8 @@ const StateContext = createContext();
 export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [search, setSearch] = useState("");
-
   const [screenSize, setScreenSize] = useState(undefined);
-
-  const [currentColor, setCurrentColor] = useState("");
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   return (
     <StateContext.Provider
@@ -17,10 +15,10 @@ export const ContextProvider = ({ children }) => {
         setActiveMenu,
         screenSize,
         setScreenSize,
-        currentColor,
-        setCurrentColor,
         search,
         setSearch,
+        snackBarOpen,
+        setSnackBarOpen,
       }}
     >
       {children}

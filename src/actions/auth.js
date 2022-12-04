@@ -45,7 +45,6 @@ export const getUser = (id) => async (dispatch) => {
   try {
     const { data } = await api.fetchUser(id);
     dispatch({ type: "FETCH_USER_BY_ID", payload: data });
-    dispatch({ type: "LOADING_END" });
   } catch (err) {
     dispatch({ type: "IS_USER_ERROR", payload: err.response.data.message });
   }
@@ -65,11 +64,17 @@ export const updateUser = (id, update, navigate) => async (dispatch) => {
     dispatch({ type: "IS_USER_ERROR", payload: err.response.data.message });
   }
 };
-export const changePassword = (id, passwordbody) => async (dispatch) => {
-  try {
-    const { data } = await api.changePassword(id, passwordbody);
-    dispatch({ type: "CHANGE_PASSWORD", payload: data });
-  } catch (err) {
-    dispatch({ type: "IS_USER_ERROR", payload: err.message });
-  }
-};
+export const changePassword =
+  (id, passwordbody, setSnackBarOpen) => async (dispatch) => {
+    try {
+      dispatch({ type: "Loading_start_password" });
+
+      const { data } = await api.changePassword(id, passwordbody);
+      dispatch({ type: "CHANGE_PASSWORD", payload: data });
+      dispatch({ type: "Loading_end_password" });
+      setSnackBarOpen(true);
+    } catch (err) {
+      dispatch({ type: "Loading_end_password" });
+      dispatch({ type: "IS_USER_ERROR", payload: err.response.data.message });
+    }
+  };

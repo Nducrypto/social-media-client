@@ -14,26 +14,37 @@ import InputAuth from "../Auth/InputAuth";
 import FileBase from "react-file-base64";
 import Post from "../Posts/Post/Post";
 import { useNavigate } from "react-router-dom";
+import { useStateContext } from "../../context/ContextProvider";
+import CustomizedSnackbar from "../SnackBar/SnackBar";
 
 const Account = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [error, setError] = useState(false);
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const [firstName, setFirstName] = useState(
+    user?.result.firstName ? user?.result.firstName : ""
+  );
+  const [lastName, setLastName] = useState(
+    user?.result.lastName ? user?.result.lastName : ""
+  );
   const [bio, setBio] = useState("");
   const [profilePics, setProfilePics] = useState("");
   const [password, setPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [editProfile, setEditProfile] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("profile"));
   const id = user?.result?._id;
   const dispatch = useDispatch();
   const theme = createTheme();
   const navigate = useNavigate();
+
   const { posts, isLoading } = useSelector((state) => state.allPosts);
 
   const filterPost = posts.filter((p) => p.creator === id);
 
-  const { loading } = useSelector((state) => state.authReducer);
+  const { loading, isUserError, change_pass_loading } = useSelector(
+    (state) => state.authReducer
+  );
 
   useEffect(() => {
     JSON.parse(localStorage.getItem("profile"));
@@ -60,20 +71,34 @@ const Account = () => {
     setProfilePics("");
   };
 
+  const { success, setSnackBarOpen } = useStateContext();
+  console.log(success);
   //  =====HANDLECHANGEPASSWORD
-  const handleChangePassword = () => {
-    dispatch(
-      changePassword(id, {
-        oldPassword,
-        password,
-      })
-    );
-    setPassword("");
-    setOldPassword("");
+  const handleChangePassword = (e) => {
+    e.preventDefault();
+
+    if (!password || !oldPassword || !confirmPassword) {
+      setError(true);
+    } else {
+      dispatch(
+        changePassword(
+          id,
+          {
+            oldPassword,
+            password,
+            confirmPassword,
+          },
+
+          setSnackBarOpen
+        )
+      );
+    }
   };
 
   return (
     <div style={{ marginTop: "5rem" }}>
+      <CustomizedSnackbar message="Password Changed Successfully" />
+
       <div>
         {!editProfile ? (
           <Button
@@ -100,101 +125,171 @@ const Account = () => {
             cancel
           </Button>
         )}
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <div>
-            <div>
-              <img
-                style={{ height: "4rem", borderRadius: "4rem" }}
-                src={user?.result.profilePics}
-                alt=""
-              />
-            </div>
-            <Typography
-              sx={{
-                fontSize: "1.5rem",
-              }}
-            >{`${user?.result.firstName} ${user?.result.lastName}`}</Typography>
-            <Typography
-              sx={{
-                fontSize: "1.3rem",
-              }}
-            >
-              {user?.result.email}
-            </Typography>
-            <Typography sx={{ textAlign: "center", fontSize: "1.7rem" }}>
-              {user?.result.bio}
-            </Typography>
 
-            <Container component="main" maxWidth="xs">
-              {editProfile && (
-                <Paper
-                  elevation={6}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    padding: theme.spacing(2),
-                    marginTop: "1rem",
-                  }}
-                >
-                  <Grid container spacing={2}>
-                    {user?.result && (
-                      <>
-                        <InputAuth
-                          label="firstName"
+        <div>
+          <div>
+            <img
+              style={{ height: "4rem", borderRadius: "4rem" }}
+              src={user?.result.profilePics}
+              alt=""
+            />
+          </div>
+          <Typography
+            sx={{
+              fontSize: "1.5rem",
+            }}
+          >{`${user?.result.firstName} ${user?.result.lastName}`}</Typography>
+          <Typography
+            sx={{
+              fontSize: "1.3rem",
+            }}
+          >
+            {user?.result.email}
+          </Typography>
+          <Typography sx={{ textAlign: "center", fontSize: "1.7rem" }}>
+            {user?.result.bio}
+          </Typography>
+
+          <Container component="main" maxWidth="xs">
+            {editProfile && (
+              <Paper
+                elevation={6}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: theme.spacing(2),
+                  marginTop: "1rem",
+                }}
+              >
+                <Grid container spacing={2}>
+                  {user?.result && (
+                    <>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <input
+                          style={{
+                            width: "100%",
+                            height: "3rem",
+                            fontSize: "1.3rem",
+                            borderRadius: "1rem",
+                          }}
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
                         />
-                        <InputAuth
-                          label="lastName"
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <input
+                          style={{
+                            width: "100%",
+                            height: "3rem",
+                            fontSize: "1.3rem",
+                            borderRadius: "1rem",
+                          }}
                           type="email"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
                         />
-                      </>
-                    )}
-                    <InputAuth
-                      multiline
+                      </Grid>
+                    </>
+                  )}
+                  <Grid item xs={12} sm={12} md={12}>
+                    <textarea
+                      style={{
+                        width: "100%",
+                        color: "black",
+
+                        fontSize: "1.3rem",
+                        borderRadius: "1rem",
+                      }}
                       rows={4}
-                      label="bio"
+                      placeholder="bio"
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                     />
-                    <FileBase
-                      type="file"
-                      multiple={false}
-                      onDone={({ base64 }) => setProfilePics(base64)}
-                    />
+                  </Grid>
+
+                  <FileBase
+                    type="file"
+                    multiple={false}
+                    onDone={({ base64 }) => setProfilePics(base64)}
+                  />
+                  {loading ? (
+                    <CircularProgress />
+                  ) : (
                     <Button
                       fullWidth
+                      size="small"
                       variant="contained"
                       color="primary"
+                      disabled={loading}
                       style={{
                         margin: theme.spacing(3, 0, 2),
                         marginTop: theme.spacing(3),
                       }}
                       onClick={() => {
                         handleSubmit();
-                        setEditProfile(false);
                       }}
                     >
                       submit
                     </Button>
-                    <div>Change Password</div>
-                    <div style={{ marginRight: "3rem" }}>
-                      <InputAuth
-                        label="oldPassword"
-                        value={oldPassword}
-                        onChange={(e) => setOldPassword(e.target.value)}
-                      />
-                      <InputAuth
-                        label="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
+                  )}
 
+                  <div>Change Password</div>
+                  <div style={{ marginRight: "3rem" }}>
+                    <div
+                      style={{
+                        marginTop: isUserError ? "1rem" : "",
+                        marginBottom: isUserError ? "0.5rem" : "",
+                      }}
+                    >
+                      {isUserError}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: isUserError ? "1rem" : "",
+                        marginBottom: isUserError ? "0.5rem" : "",
+                      }}
+                    >
+                      {error && "Please Fill All The fields"}
+                    </div>
+                    <div style={{ marginBottom: "0.7rem" }}>
+                      <InputAuth
+                        // required
+                        label="OldPassword"
+                        value={oldPassword}
+                        onChange={(e) => {
+                          setError(false);
+                          setOldPassword(e.target.value);
+                          dispatch({ type: "NO_ERROR" });
+                        }}
+                      />
+                    </div>
+                    <div style={{ marginBottom: "0.7rem" }}>
+                      <InputAuth
+                        required
+                        label="Password"
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          dispatch({ type: "NO_ERROR" });
+                          setError(false);
+                        }}
+                      />
+                    </div>
+
+                    <InputAuth
+                      required
+                      label="ConfirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        dispatch({ type: "NO_ERROR" });
+                        setError(false);
+                      }}
+                    />
+                    {change_pass_loading ? (
+                      <CircularProgress />
+                    ) : (
                       <Button
                         style={{ marginTop: "1rem" }}
                         variant="contained"
@@ -202,13 +297,13 @@ const Account = () => {
                       >
                         submit
                       </Button>
-                    </div>
-                  </Grid>
-                </Paper>
-              )}
-            </Container>
-          </div>
-        )}
+                    )}
+                  </div>
+                </Grid>
+              </Paper>
+            )}
+          </Container>
+        </div>
       </div>
 
       {/* =====USER POST */}

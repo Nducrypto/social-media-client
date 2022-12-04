@@ -64,12 +64,6 @@ const Navbar = () => {
     JSON.parse(localStorage.getItem("profile"));
   }, [location]);
 
-  // useEffect(() => {
-  //   dispatch(getUser(id));
-
-  //   setUser(JSON.parse(localStorage.getItem("profile")));
-  // }, [location]);
-
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -114,7 +108,7 @@ const Navbar = () => {
       <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
         <Input
           sx={{
-            width: { xs: "6rem", md: "15rem", lg: "15rem", sm: "12rem" },
+            width: { xs: "6rem", md: "14rem", lg: "15rem", sm: "12rem" },
             height: "2rem",
             marginTop: "0.3rem",
             backgroundColor: "white",

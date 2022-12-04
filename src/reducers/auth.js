@@ -4,6 +4,7 @@ const authReducer = (
   authReducer = {
     authData: null,
     loading: false,
+    change_pass_loading: false,
     allUser: [],
     singleUser: {},
     isUserError: false,
@@ -16,8 +17,16 @@ const authReducer = (
 
     case "LOADING_END":
       return { ...authReducer, loading: false };
+
+    case "Loading_start_password":
+      return { ...authReducer, change_pass_loading: true };
+    case "Loading_end_password":
+      return { ...authReducer, change_pass_loading: false };
     case "IS_USER_ERROR":
-      return { ...authReducer, isUserError: true };
+      return { ...authReducer, isUserError: action.payload };
+
+    case "NO_ERROR":
+      return { ...authReducer, isUserError: false };
     case AUTH:
       localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
       return {
@@ -34,7 +43,7 @@ const authReducer = (
       };
 
     case "LOGOUT":
-      localStorage.clear();
+      localStorage.clear("profile");
 
       return { ...authReducer, authData: null, loading: false, errors: null };
 
@@ -56,11 +65,11 @@ const authReducer = (
           p._id === action.data._id ? action?.data : p
         ),
       };
-    case "CHANGE_PASSWORD":
-      return {
-        ...authReducer,
-        singleUser: action.payload,
-      };
+    // case "CHANGE_PASSWORD":
+    //   return {
+    //     ...authReducer,
+    //     singleUser: action.payload,
+    //   };
 
     default:
       return authReducer;

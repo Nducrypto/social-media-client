@@ -93,6 +93,7 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
       style={{
         padding: theme.spacing(1),
         borderRadius: "0 2rem",
+        marginBottom: "1.4rem",
 
         // backgroundColor: "red",
         // backgroundColor: "#fffafa",

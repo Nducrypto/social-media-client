@@ -13,11 +13,13 @@ const Posts = ({ setCurrentId, search }) => {
     <CircularProgress />
   ) : (
     <Grid container justifyContent="center" alignItems="center" spacing={3}>
-      {posts?.map((post) => (
-        <Grid key={post._id} item xs={10} sm={10} md={8} lg={8}>
-          <Post post={post} setCurrentId={setCurrentId} />
-        </Grid>
-      ))}
+      {posts
+        ?.sort((a, b) => (a._id > b._id ? -1 : +1))
+        .map((post) => (
+          <Grid key={post._id} item xs={10} sm={10} md={8} lg={8}>
+            <Post post={post} setCurrentId={setCurrentId} />
+          </Grid>
+        ))}
     </Grid>
   );
 };
