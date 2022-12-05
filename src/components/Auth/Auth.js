@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 // import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import FileBase from "react-file-base64";
 
 // import Icon from "./icon";
 import { signin, signup } from "../../actions/auth";
@@ -32,7 +31,6 @@ const initialState = {
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
-  const [error, setError] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = createTheme();
@@ -106,7 +104,6 @@ const SignUp = () => {
         elevation={6}
       >
         <h2>{isUserError && isUserError.message}</h2>
-        <h2>{error && "Select profile Picture"}</h2>
 
         {loading ? (
           <CircularProgress />
