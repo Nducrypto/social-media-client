@@ -27,7 +27,6 @@ const initialState = {
   email: "",
   password: "",
   confirmPassword: "",
-  profilePics: "",
 };
 
 const SignUp = () => {
@@ -52,9 +51,7 @@ const SignUp = () => {
   // HANDLESUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isSignup & !form.profilePics) {
-      return setError(true);
-    } else if (isSignup) {
+    if (isSignup) {
       dispatch(signup(form, navigate));
     } else {
       dispatch(signin(form, navigate));
@@ -179,17 +176,6 @@ const SignUp = () => {
                 onChange={handleChange}
                 type="password"
               />
-            )}
-            {isSignup && (
-              <span style={{ marginTop: "1rem" }}>
-                <FileBase
-                  type="file"
-                  multiple={false}
-                  onDone={({ base64 }) =>
-                    setForm({ ...form, profilePics: base64 })
-                  }
-                />
-              </span>
             )}
           </Grid>
 
