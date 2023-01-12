@@ -18,13 +18,15 @@ const Sidebar = () => {
   };
 
   // ====BACKGROUNDCOLOR
-  const handleBackgroundColor = (item) => {
-    if ((location.pathname === "/") & (item === "Home")) {
+  const handleBackgroundColor = (title) => {
+    if ((location.pathname === "/") & (title === "Home")) {
       return "orange";
-    } else if ((location.pathname === "/account") & (item === "Account")) {
+    } else if ((location.pathname === "/account") & (title === "Account")) {
       return "orange";
-    } else if ((location.pathname === "/faq") & (item === "FAQ")) {
+    } else if ((location.pathname === "/faq") & (title === "FAQ")) {
       return "orange";
+    } else if (!user.result.isAdmin & (title === "Users")) {
+      return null;
     } else {
       return "darkgrey";
     }
@@ -114,7 +116,9 @@ const Sidebar = () => {
                         style={{ color: "black" }}
                         className="m-3 mt-4 capitalize"
                       >
-                        {item.title}
+                        {!user?.result?.isAdmin && item.title === "Users"
+                          ? null
+                          : item.title}
                       </p>
                     </NavLink>
                   </div>

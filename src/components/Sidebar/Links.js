@@ -7,8 +7,13 @@ export const links = [
     title: "Account",
     url: "account",
   },
+
   {
     title: "FAQ",
     url: "faq",
+  },
+  {
+    title: "Users",
+    url: "users",
   },
 ];

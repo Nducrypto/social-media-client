@@ -10,11 +10,13 @@ import {
   Account,
   Auth,
   Faq,
+  Users,
 } from "./components";
 
 import { getPosts } from "./actions/posts";
 import { useDispatch } from "react-redux";
 import { useStateContext } from "./context/ContextProvider";
+import { getUsers } from "./actions/auth";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -24,7 +26,7 @@ const App = () => {
 
   useEffect(() => {
     JSON.parse(localStorage.getItem("profile"));
-    // dispatch(getUsers());
+    dispatch(getUsers());
     dispatch(getPosts());
   }, [location, dispatch, data]);
 
@@ -37,6 +39,13 @@ const App = () => {
   };
   const UserProtected = ({ children }) => {
     if (user?.result) {
+      return children;
+    } else {
+      return <Navigate to="/" />;
+    }
+  };
+  const AdminProtected = ({ children }) => {
+    if (user?.result.isAdmin) {
       return children;
     } else {
       return <Navigate to="/" />;
@@ -98,6 +107,14 @@ const App = () => {
                 <UserProtected>
                   <Faq />
                 </UserProtected>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <AdminProtected>
+                  <Users />
+                </AdminProtected>
               }
             />
             <Route

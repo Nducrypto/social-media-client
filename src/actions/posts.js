@@ -50,8 +50,8 @@ export const getPostsByCreator = (name) => async (dispatch) => {
 
     dispatch({ type: FETCH_BY_CREATOR, payload: data });
     dispatch({ type: END_LOADING });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err.response.data.message);
   }
 };
 
@@ -75,8 +75,8 @@ export const createPost = (post) => async (dispatch) => {
 
     dispatch({ type: CREATE, payload: data });
     dispatch({ type: END_LOADING });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err.response.data.message);
   }
 };
 
@@ -85,8 +85,8 @@ export const updatePost = (id, post) => async (dispatch) => {
     const { data } = await api.updatePost(id, post);
 
     dispatch({ type: UPDATE, payload: data });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err.response.data.message);
   }
 };
 

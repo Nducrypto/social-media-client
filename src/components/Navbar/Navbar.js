@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { getPostsBySearch } from "../../actions/posts";
 // import * as actionType from "../../constants/actionTypes";
 import { useStateContext } from "../../context/ContextProvider";
+import { LOGOUT } from "../../constants/actionTypes";
 // import LogoutPrompt from "./LogoutPrompt";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
@@ -54,9 +55,8 @@ const Navbar = () => {
       setSearch("");
     }
   };
-
   const logout = () => {
-    dispatch({ type: "LOGOUT" });
+    dispatch({ type: LOGOUT });
 
     navigate("/");
   };

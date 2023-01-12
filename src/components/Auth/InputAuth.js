@@ -15,6 +15,7 @@ const InputAuth = ({
   disabled,
   rows,
   multiline,
+  value,
 }) => (
   <Grid item xs={12} sm={half ? 6 : 12}>
     <TextField
@@ -22,6 +23,7 @@ const InputAuth = ({
       rows={rows}
       multiline={multiline}
       name={name}
+      value={value}
       onChange={onChange}
       variant="outlined"
       required

@@ -19,6 +19,8 @@ import CustomizedSnackbar from "../SnackBar/SnackBar";
 
 const Account = () => {
   const [error, setError] = useState(false);
+  const { setSnackBarOpen } = useStateContext();
+
   const user = JSON.parse(localStorage.getItem("profile"));
   const [firstName, setFirstName] = useState(
     user?.result.firstName ? user?.result.firstName : ""
@@ -34,6 +36,7 @@ const Account = () => {
   const [editProfile, setEditProfile] = useState(false);
 
   const id = user?.result?._id;
+  console.log(id);
   const dispatch = useDispatch();
   const theme = createTheme();
   const navigate = useNavigate();
@@ -71,8 +74,6 @@ const Account = () => {
     setProfilePics("");
   };
 
-  const { success, setSnackBarOpen } = useStateContext();
-  console.log(success);
   //  =====HANDLECHANGEPASSWORD
   const handleChangePassword = (e) => {
     e.preventDefault();
@@ -213,6 +214,7 @@ const Account = () => {
                     multiple={false}
                     onDone={({ base64 }) => setProfilePics(base64)}
                   />
+
                   {loading ? (
                     <CircularProgress />
                   ) : (

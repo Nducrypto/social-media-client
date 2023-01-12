@@ -30,6 +30,7 @@ const initialState = {
 
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
+  console.log(form);
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,8 +89,8 @@ const SignUp = () => {
   //   console.log("Google Sign In was unsuccessful. Try again later");
 
   // HANDLECHANGE
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // const handleChange = (e) =>
+  //   setForm({ ...form, [e.target.name]: e.target.value });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -133,16 +134,21 @@ const SignUp = () => {
             {isSignup && (
               <>
                 <InputAuth
-                  name="firstName"
+                  value={form.firstName}
                   label="First Name"
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    setForm({ ...form, firstName: e.target.value })
+                  }
                   autoFocus
                   half
                 />
                 <InputAuth
-                  name="lastName"
+                  value={form.lastName}
                   label="Last Name"
-                  onChange={handleChange}
+                  // onChange={handleChange}
+                  onChange={(e) =>
+                    setForm({ ...form, lastName: e.target.value })
+                  }
                   half
                 />
               </>
@@ -150,29 +156,37 @@ const SignUp = () => {
 
             {/* EMAIL INPUTHAUTH */}
             <InputAuth
-              name="email"
+              value={form.email}
               label="Email Address"
-              onChange={handleChange}
+              // onChange={handleChange}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               type="email"
             />
 
             {/* PASWORD INPUTHAUTH */}
             <InputAuth
-              name="password"
+              value={form.password}
               label="Password"
-              onChange={handleChange}
+              name="password"
+              // onChange={handleChange}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
               type={showPassword ? "text" : "password"}
               handleShowPassword={handleShowPassword}
             />
 
             {/* CONFIRMATION INPUTHAUTH nd wil only show if ur in d signup form */}
             {isSignup && (
-              <InputAuth
-                name="confirmPassword"
-                label="Repeat Password"
-                onChange={handleChange}
-                type="password"
-              />
+              <>
+                <InputAuth
+                  value={form.confirmPassword}
+                  label="Repeat Password"
+                  // onChange={handleChange}
+                  onChange={(e) =>
+                    setForm({ ...form, confirmPassword: e.target.value })
+                  }
+                  type="password"
+                />
+              </>
             )}
           </Grid>
 
