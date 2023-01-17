@@ -6,6 +6,7 @@ import {
   createTheme,
   Button,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -35,15 +36,14 @@ const Account = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [editProfile, setEditProfile] = useState(false);
 
-  const id = user?.result?._id;
-  console.log(id);
+  const userId = user?.result?._id;
   const dispatch = useDispatch();
   const theme = createTheme();
   const navigate = useNavigate();
 
   const { posts, isLoading } = useSelector((state) => state.allPosts);
 
-  const filterPost = posts.filter((p) => p.creator === id);
+  const filterPost = posts.filter((p) => p.creator === userId);
 
   const { loading, isUserError, change_pass_loading } = useSelector(
     (state) => state.authReducer
@@ -51,14 +51,14 @@ const Account = () => {
 
   useEffect(() => {
     JSON.parse(localStorage.getItem("profile"));
-    dispatch(getUser(id));
-  }, [dispatch, id]);
+    dispatch(getUser(userId));
+  }, [dispatch, userId]);
 
   // === HANDLEUPDATEUSER
   const handleSubmit = () => {
     dispatch(
       updateUser(
-        id,
+        userId,
         {
           bio: bio,
           firstName,
@@ -83,7 +83,7 @@ const Account = () => {
     } else {
       dispatch(
         changePassword(
-          id,
+          userId,
           {
             oldPassword,
             password,
@@ -99,58 +99,59 @@ const Account = () => {
   return (
     <div style={{ marginTop: "5rem" }}>
       <CustomizedSnackbar message="Password Changed Successfully" />
-
-      <div>
-        {!editProfile ? (
-          <Button
-            onClick={() => setEditProfile(true)}
-            variant="contained"
-            sx={{
-              float: "right",
-              textTransform: "capitalize",
-              borderRadius: "1rem",
+      <Button
+        onClick={() => setEditProfile((prev) => !prev)}
+        variant="contained"
+        sx={{
+          textTransform: "capitalize",
+          borderRadius: "1rem",
+        }}
+      >
+        {editProfile ? "cancel" : "edit Profile"}
+      </Button>
+      <Box
+        sx={{
+          textAlign: "center",
+          marginTop: { xs: "-1rem", sm: "-4rem", md: "-4rem" },
+        }}
+      >
+        <Typography variant="h4">
+          {user?.result?.firstName} {user?.result?.lastName}{" "}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: "1.3rem",
+          }}
+        >
+          {user?.result.email}
+        </Typography>
+        <div
+          style={{
+            height: "6rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            style={{
+              borderRadius: "50%",
+              width: 90,
+              height: 90,
+              background: "red",
             }}
-          >
-            edit Profile
-          </Button>
-        ) : (
-          <Button
-            onClick={() => setEditProfile(false)}
-            variant="contained"
-            sx={{
-              float: "right",
-              textTransform: "capitalize",
-              borderRadius: "1rem",
-            }}
-          >
-            cancel
-          </Button>
-        )}
-
-        <div>
-          <div>
-            <img
-              style={{ height: "4rem", borderRadius: "4rem" }}
-              src={user?.result.profilePics}
-              alt=""
-            />
-          </div>
-          <Typography
-            sx={{
-              fontSize: "1.5rem",
-            }}
-          >{`${user?.result.firstName} ${user?.result.lastName}`}</Typography>
-          <Typography
-            sx={{
-              fontSize: "1.3rem",
-            }}
-          >
-            {user?.result.email}
-          </Typography>
-          <Typography sx={{ textAlign: "center", fontSize: "1.7rem" }}>
-            {user?.result.bio}
-          </Typography>
-
+            src={user?.result.profilePics}
+            alt={user?.result?.firstName}
+          />
+        </div>
+      </Box>
+      <Box
+        sx={{
+          textAlign: "center",
+          marginTop: { xs: "3rem", sm: "4rem", md: "1rem" },
+        }}
+      >
+        <div style={{ padding: "0 1rem 0 1rem" }}>
           <Container component="main" maxWidth="xs">
             {editProfile && (
               <Paper
@@ -164,35 +165,31 @@ const Account = () => {
                 }}
               >
                 <Grid container spacing={2}>
-                  {user?.result && (
-                    <>
-                      <Grid item xs={12} sm={12} md={12}>
-                        <input
-                          style={{
-                            width: "100%",
-                            height: "3rem",
-                            fontSize: "1.3rem",
-                            borderRadius: "1rem",
-                          }}
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={12}>
-                        <input
-                          style={{
-                            width: "100%",
-                            height: "3rem",
-                            fontSize: "1.3rem",
-                            borderRadius: "1rem",
-                          }}
-                          type="email"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                        />
-                      </Grid>
-                    </>
-                  )}
+                  <Grid item xs={12} sm={12} md={12}>
+                    <input
+                      style={{
+                        width: "100%",
+                        height: "3rem",
+                        fontSize: "1.3rem",
+                        borderRadius: "1rem",
+                      }}
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <input
+                      style={{
+                        width: "100%",
+                        height: "3rem",
+                        fontSize: "1.3rem",
+                        borderRadius: "1rem",
+                      }}
+                      type="email"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </Grid>
                   <Grid item xs={12} sm={12} md={12}>
                     <textarea
                       style={{
@@ -306,7 +303,7 @@ const Account = () => {
             )}
           </Container>
         </div>
-      </div>
+      </Box>
 
       {/* =====USER POST */}
       <div style={{ marginTop: "4rem" }}>

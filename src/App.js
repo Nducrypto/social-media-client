@@ -20,7 +20,7 @@ import { getUsers } from "./actions/auth";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
-  const { activeMenu, data } = useStateContext();
+  const { activeMenu, data, setActiveMenu } = useStateContext();
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -53,17 +53,18 @@ const App = () => {
   };
   return (
     <div className="flex relative">
-      {activeMenu ? (
-        // <div className="container">
-        <div className="w-72 fixed sidebar">
-          <Sidebar />
-        </div>
-      ) : (
-        // </div>
-        <div className="w-0 ">
-          <Sidebar />
-        </div>
-      )}
+      {!user?.result && setActiveMenu(false)}
+      <>
+        {activeMenu ? (
+          <div className="w-72 fixed sidebar">
+            <Sidebar />
+          </div>
+        ) : (
+          <div className="w-0 ">
+            <Sidebar />
+          </div>
+        )}
+      </>
 
       <div
         className={`min-h-screen w-full  ${

@@ -1,9 +1,8 @@
-import React from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdOutlineCancel } from "react-icons/md";
 import { links } from "./Links";
 import { Tooltip } from "@mui/material";
-import Auth from "../Auth/Auth";
+// import Auth from "../Auth/Auth";
 import { useStateContext } from "../../context/ContextProvider";
 
 const Sidebar = () => {
@@ -69,7 +68,7 @@ const Sidebar = () => {
                 <MdOutlineCancel />
               </button>
             </Tooltip>
-            <Auth />
+            {/* <Auth /> */}
           </>
         ) : (
           activeMenu && (

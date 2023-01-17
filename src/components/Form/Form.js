@@ -11,8 +11,11 @@ import FileBase from "react-file-base64";
 
 import { createPost, updatePost } from "../../actions/posts";
 import { Container } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
+  const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem("profile"));
   const profilePics = user?.result?.profilePics;
   const lastName = user?.result?.lastName;
@@ -32,14 +35,6 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
   const dispatch = useDispatch();
   const theme = createTheme();
 
-  const clear = () => {
-    setCurrentId(0);
-    setPostData({
-      message: "",
-      selectedFile: "",
-    });
-  };
-
   useEffect(() => {
     if (currentId) setPostData(editPost);
   }, [editPost, currentId]);
@@ -51,7 +46,6 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
       dispatch(
         createPost({ ...postData, profilePics, firstName, lastName, creator })
       );
-      clear();
     } else {
       dispatch(
         updatePost(currentId, {
@@ -62,8 +56,11 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
           creator,
         })
       );
-      clear();
     }
+    setPostData({
+      message: "",
+      selectedFile: "",
+    });
   };
 
   if (!user?.result) {
@@ -94,9 +91,6 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
         padding: theme.spacing(1),
         borderRadius: "0 2rem",
         marginBottom: "1.4rem",
-
-        // backgroundColor: "red",
-        // backgroundColor: "#fffafa",
       }}
       elevation={6}
     >
@@ -119,9 +113,11 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
               borderRadius: "3rem",
               marginTop: ".3rem",
               marginLeft: "-2rem",
+              backgroundColor: "grey",
             }}
             src={user?.result.profilePics}
             alt=""
+            onClick={() => navigate("/account")}
           />
           <TextField
             sx={{ backgroundColor: "white" }}

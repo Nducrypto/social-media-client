@@ -6,14 +6,11 @@ import { useNavigate } from "react-router-dom";
 const Users = () => {
   const [isSuspended, setIsSuspended] = useState("");
   const [isAdmin, setIsAdmin] = useState("");
-  console.log(isAdmin);
   const [firstName, setFirstName] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { allUsers, loading } = useSelector((state) => state.authReducer);
-  console.log(allUsers);
-  console.log(isSuspended);
 
   const handleSubmit = (id) => {
     dispatch(

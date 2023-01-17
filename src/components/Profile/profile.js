@@ -13,7 +13,7 @@ const Profile = () => {
 
   const location = useLocation();
 
-  // PUSHED THIS post.location from posts an profileDetails
+  // PUSHED THIS post.location from posts an profileDetails andd Posts
   const post = location.state.post;
 
   useEffect(() => {
@@ -65,7 +65,13 @@ const Profile = () => {
           <CircularProgress size="4rem" />
         </div>
       ) : (
-        <Grid container justifyContent="center" alignItems="center" spacing={3}>
+        <Grid
+          sx={{ mt: "2rem" }}
+          container
+          justifyContent="center"
+          alignItems="center"
+          spacing={3}
+        >
           {profileposts?.map((post) => (
             <Grid key={post._id} item xs={10} sm={8} md={8} lg={7}>
               <>

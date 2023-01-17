@@ -10,7 +10,9 @@ const Posts = ({ setCurrentId, search }) => {
   if (!posts?.length && !isLoading) return "No posts";
 
   return isLoading ? (
-    <CircularProgress />
+    <div style={{ textAlign: "center", marginTop: "8rem" }}>
+      <CircularProgress size="4rem" />
+    </div>
   ) : (
     <Grid container justifyContent="center" alignItems="center" spacing={3}>
       {posts
