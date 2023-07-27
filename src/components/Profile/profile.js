@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import { Button, CircularProgress, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import Post from "../Posts/Post/Post";
@@ -24,7 +24,7 @@ const Profile = () => {
   useEffect(() => {
     dispatch(getPostsByCreator(creator));
     dispatch(getUser(creator));
-  }, [dispatch]);
+  }, [dispatch, creator]);
 
   function handleFollow() {
     dispatch(follow(creator, { followerId: user?.result?._id }));

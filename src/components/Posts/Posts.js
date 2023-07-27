@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Post from "./Post/Post";
 
 const Posts = ({ setCurrentId }) => {
-  const { posts, isLoading } = useSelector((state) => state.allPosts);
+  const { posts, isLoading } = useSelector((state) => state?.allPosts);
 
   if (!posts?.length && !isLoading) return "No posts";
 

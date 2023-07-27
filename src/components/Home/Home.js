@@ -16,7 +16,7 @@ const Home = () => {
   const searchQuery = query.get("searchQuery");
   const theme = createTheme();
   const [currentId, setCurrentId] = useState(0);
-  const [clicked, setClicked] = useState(false);
+
   // const { isLoading } = useSelector((state) => state.allPosts);
 
   return (
@@ -32,12 +32,7 @@ const Home = () => {
       >
         <div>
           <div>
-            <Form
-              clicked={clicked}
-              setClicked={setClicked}
-              currentId={currentId}
-              setCurrentId={setCurrentId}
-            />
+            <Form currentId={currentId} setCurrentId={setCurrentId} />
           </div>
           <div>
             <Posts setCurrentId={setCurrentId} />
