@@ -22,6 +22,7 @@ export const LOADING_START = "LOADING_START";
 export const LOADING_END = "LOADING_END";
 export const Loading_start_password = "Loading_start_password";
 export const Loading_end_password = "Loading_end_password";
+export const FOLLOW = "FOLLOW";
 
 export const AUTH = "AUTH";
 export const LOGOUT = "LOGOUT";

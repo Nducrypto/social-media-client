@@ -1,38 +1,33 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  createTheme,
-} from "@mui/material";
+import { Typography, Paper, createTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import FileBase from "react-file-base64";
 
 import { createPost, updatePost } from "../../actions/posts";
-import { Container } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 
-const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
-  const navigate = useNavigate();
+import { useNavigate } from "react-router-dom";
+import "./form.css";
+const Form = ({ currentId }) => {
+  const [postData, setPostData] = useState({
+    message: "",
+    selectedFile: "",
+  });
+  const [inputHeight, setInputHeight] = useState(48);
 
   const user = JSON.parse(localStorage.getItem("profile"));
   const profilePics = user?.result?.profilePics;
   const lastName = user?.result?.lastName;
   const firstName = user?.result?.firstName;
+  const dispatch = useDispatch();
 
-  const [postData, setPostData] = useState({
-    message: "",
-    selectedFile: "",
-  });
+  const navigate = useNavigate();
+
   const creator = user?.result?._id;
 
   const { posts } = useSelector((state) => state.allPosts);
 
   //=== this is for updating of post
-  const editPost = posts.find((p) => (currentId ? p._id === currentId : null));
+  const editPost = posts.find((p) => currentId && p._id === currentId);
 
-  const dispatch = useDispatch();
   const theme = createTheme();
 
   useEffect(() => {
@@ -63,6 +58,26 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
     });
   };
 
+  const handleInputChange = (e) => {
+    setInputHeight(e.target.scrollHeight);
+  };
+
+  //  ===== Select image by converting to base64 ,String =====
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      // Use reader.result, which contains the base64-encoded string
+      const base64String = reader.result;
+      setPostData({ ...postData, selectedFile: base64String });
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+  console.log(handleFileChange);
   if (!user?.result) {
     return (
       <Paper
@@ -86,87 +101,52 @@ const Form = ({ currentId, setCurrentId, clicked, setClicked }) => {
   }
 
   return (
-    <div
-      style={{
-        padding: theme.spacing(1),
-        borderRadius: "0 2rem",
-        marginBottom: "1.4rem",
-      }}
-      elevation={6}
-    >
-      <form
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-        autoComplete="off"
-        noValidate
-        onSubmit={handleSubmit}
-      >
-        <Typography variant="h6">{currentId ? "Editing... " : null}</Typography>
-        <Container style={{ display: "flex", gap: ".4rem" }}>
-          <img
-            style={{
-              height: "3rem",
-              width: "3rem",
-              borderRadius: "3rem",
-              marginTop: ".3rem",
-              marginLeft: "-2rem",
-              backgroundColor: "grey",
-            }}
-            src={user?.result.profilePics}
-            alt=""
-            onClick={() => navigate("/account")}
-          />
-          <TextField
-            sx={{ backgroundColor: "white" }}
-            name="message"
-            variant="outlined"
-            label="Post..."
-            fullWidth
-            multiline
-            rows={clicked ? 4 : 1}
-            value={postData.message}
-            onClick={() => setClicked(true)}
-            onChange={(e) => {
-              setPostData({ ...postData, message: e.target.value });
-            }}
-          />
-        </Container>
+    <div>
+      <div className="tweet-input-container">
+        <img
+          src={user?.result.profilePics}
+          alt=""
+          onClick={() =>
+            navigate(
+              `/profile?firstName=${user?.result?.firstName}&lastName=${user?.result?.lastName}&creator=${creator}`
+            )
+          }
+          className="profile-pic"
+        />
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "97%",
-            marginTop: "0.3rem",
+        <textarea
+          className="tweet-input"
+          placeholder="What's happening?"
+          value={postData.message}
+          onChange={(e) => {
+            setPostData({ ...postData, message: e.target.value });
+            handleInputChange(e);
           }}
-        >
-          <FileBase
-            type="file"
-            multiple={false}
-            onDone={({ base64 }) =>
-              setPostData({ ...postData, selectedFile: base64 })
-            }
-          />
+          style={{ height: inputHeight }}
+        />
+      </div>
+      <div className="upload-button-image-container">
+        <label className="upload-button" htmlFor="fileInput">
+          Upload
+          <span role="img" aria-label="camera" style={{ marginLeft: "6px" }}>
+            📷
+          </span>
+        </label>
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
 
-          <Button
-            sx={{
-              width: "10%",
-              height: "70%",
-            }}
-            variant="contained"
-            color="primary"
-            size="small"
-            type="submit"
-            fullWidth
-            onClick={() => setClicked(false)}
-          >
-            POST
-          </Button>
-        </div>
-      </form>
+        <button className="post-button" onClick={handleSubmit}>
+          Tweet
+        </button>
+      </div>
+      {postData.selectedFile && (
+        <img src={postData.selectedFile} alt="" className="small-image" />
+      )}
     </div>
   );
 };

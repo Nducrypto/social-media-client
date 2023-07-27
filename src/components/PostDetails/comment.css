@@ -1,0 +1,113 @@
+/* Styling for the comment input container */
+.comment-input-container {
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* Styling for the comment input field */
+  .comment-input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Styling for the comment button */
+  .comment-button {
+    margin-left: 10px;
+    padding: 5px 20px;
+    background-color: #1da1f2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Hover effect for the comment button */
+  .comment-button:hover {
+    background-color: #0c87b8;
+  }
+
+  /* click to open input comment  */
+  .div-click{
+    cursor: pointer;
+  }
+  
+/* Styling for comments container */
+.comments-container {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* Styling for individual comments */
+  .comments {
+    border: 1px solid #e1e8ed;
+    background-color: #f5f8fa;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  /* Styling for comment author */
+  .comments p:nth-child(1) {
+    font-weight: bold;
+  }
+  
+  /* Styling for comment text */
+  .comments p:nth-child(2) {
+    margin-top: 5px;
+  }
+  
+  /* Styling for replies container */
+  .replies {
+    margin-top: 10px;
+    padding-left: 20px;
+    border-left: 1px solid #e1e8ed;
+  }
+  
+  /* Styling for reply author */
+  .replies p:nth-child(1) {
+    font-weight: bold;
+  }
+  
+  /* Styling for reply text */
+  .replies p:nth-child(2) {
+    margin-top: 5px;
+  }
+  
+  /* Styling for sub-replies container */
+  .subReplies {
+    margin-top: 10px;
+    padding-left: 20px;
+    border-left: 1px solid #e1e8ed;
+  }
+  
+  /* Styling for sub-reply author */
+  .subReplies div:nth-child(1) {
+    font-weight: bold;
+  }
+  
+  /* Styling for sub-reply text */
+  .subReplies div:nth-child(2) {
+    margin-top: 5px;
+  }
+  
+  /* Styling for reply and sub-reply buttons */
+  button {
+    background-color: transparent;
+    color: #1da1f2;
+    border: none;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+  
+  button:hover {
+    text-decoration: underline;
+  }
+  

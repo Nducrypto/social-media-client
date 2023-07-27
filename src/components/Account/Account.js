@@ -1,5 +1,4 @@
 import {
-  Typography,
   Container,
   Paper,
   Grid,
@@ -13,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getUser, updateUser, changePassword } from "../../actions/auth";
 import InputAuth from "../Auth/InputAuth";
 import FileBase from "react-file-base64";
-import Post from "../Posts/Post/Post";
+
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../../context/ContextProvider";
 import CustomizedSnackbar from "../SnackBar/SnackBar";
@@ -40,10 +39,6 @@ const Account = () => {
   const dispatch = useDispatch();
   const theme = createTheme();
   const navigate = useNavigate();
-
-  const { posts, isLoading } = useSelector((state) => state.allPosts);
-
-  const filterPost = posts.filter((p) => p.creator === userId);
 
   const { loading, isUserError, change_pass_loading } = useSelector(
     (state) => state.authReducer
@@ -97,7 +92,7 @@ const Account = () => {
   };
 
   return (
-    <div style={{ marginTop: "5rem" }}>
+    <div>
       <CustomizedSnackbar message="Password Changed Successfully" />
       <Button
         onClick={() => setEditProfile((prev) => !prev)}
@@ -109,46 +104,10 @@ const Account = () => {
       >
         {editProfile ? "cancel" : "edit Profile"}
       </Button>
+
       <Box
         sx={{
           textAlign: "center",
-          marginTop: { xs: "-1rem", sm: "-4rem", md: "-4rem" },
-        }}
-      >
-        <Typography variant="h4">
-          {user?.result?.firstName} {user?.result?.lastName}{" "}
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: "1.3rem",
-          }}
-        >
-          {user?.result.email}
-        </Typography>
-        <div
-          style={{
-            height: "6rem",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img
-            style={{
-              borderRadius: "50%",
-              width: 90,
-              height: 90,
-              background: "red",
-            }}
-            src={user?.result.profilePics}
-            alt={user?.result?.firstName}
-          />
-        </div>
-      </Box>
-      <Box
-        sx={{
-          textAlign: "center",
-          marginTop: { xs: "3rem", sm: "4rem", md: "1rem" },
         }}
       >
         <div style={{ padding: "0 1rem 0 1rem" }}>
@@ -304,39 +263,6 @@ const Account = () => {
           </Container>
         </div>
       </Box>
-
-      {/* =====USER POST */}
-      <div style={{ marginTop: "4rem" }}>
-        {!filterPost.length && !isLoading ? (
-          <div style={{ fontSize: "2rem", textAlign: "center" }}>
-            No Post Created By You
-          </div>
-        ) : isLoading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "13rem",
-            }}
-          >
-            <CircularProgress size="4rem" />
-          </div>
-        ) : (
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            spacing={3}
-          >
-            {filterPost?.map((post) => (
-              <Grid key={post._id} item xs={10} sm={10} md={8} lg={8}>
-                <Post post={post} />
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </div>
     </div>
   );
 };

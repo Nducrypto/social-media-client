@@ -10,6 +10,7 @@ import {
   LOADING_END,
   Loading_start_password,
   Loading_end_password,
+  FOLLOW,
 } from "../constants/actionTypes";
 
 import * as api from "../api/index.js";
@@ -103,3 +104,13 @@ export const changePassword =
       dispatch({ type: IS_USER_ERROR, payload: err.response.data.message });
     }
   };
+
+export const follow = (creator, followerId) => async (dispatch) => {
+  try {
+    const { data } = await api.follow(creator, followerId);
+
+    dispatch({ type: FOLLOW, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};

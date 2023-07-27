@@ -47,16 +47,17 @@ const allPosts = (
           post._id === action.payload._id ? action.payload : post
         ),
       };
+
     case COMMENT:
-      return {
-        ...allPosts,
-        posts: allPosts.posts.map((post) => {
-          if (post._id === action.payload._id) {
-            return action.payload;
-          }
-          return post;
-        }),
-      };
+      if (action.payload._id === allPosts.post._id) {
+        return {
+          ...allPosts,
+          post: action.payload,
+        };
+      } else {
+        return allPosts.post;
+      }
+
     case CREATE:
       return { ...allPosts, posts: [...allPosts.posts, action.payload] };
     case UPDATE:

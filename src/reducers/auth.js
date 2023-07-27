@@ -12,6 +12,7 @@ import {
   LOADING_END,
   Loading_start_password,
   Loading_end_password,
+  FOLLOW,
 } from "../constants/actionTypes";
 
 const authReducer = (
@@ -71,6 +72,11 @@ const authReducer = (
           user._id === action.payload._id ? action.payload : user
         ),
       };
+    case FOLLOW:
+      return {
+        ...authReducer,
+        singleUser: action.payload,
+      };
 
     case FETCH_USER_BY_ID:
       return { ...authReducer, singleUser: action.payload };
@@ -80,9 +86,7 @@ const authReducer = (
 
       return {
         ...authReducer,
-        singleUser: authReducer.singleUser.map((p) =>
-          p._id === action.data._id ? action?.data : p
-        ),
+        singleUser: action.data,
       };
 
     default:

@@ -23,8 +23,9 @@ export const fetchPostsBySearch = (search) =>
 export const createPost = (newPost) => API.post("/posts", newPost);
 export const likePost = (id, userId) =>
   API.patch(`/posts/likePost/${id}`, userId);
-export const comment = (value, id) =>
-  API.post(`/posts/${id}/commentPost`, { value });
+
+export const comment = (id, value) =>
+  API.post(`/posts/${id}/commentPost`, value);
 
 // i received two params here (id, updatePost) cos we nid to knw d ID of d specific post we are updtin
 export const updatePost = (id, updatedPost) =>
@@ -46,3 +47,5 @@ export const updateUserAccess = (id, userUpdate) =>
 
 export const changePassword = (id, passwordbody) =>
   API.patch(`/users/find/${id}`, passwordbody);
+export const follow = (creator, followerId) =>
+  API.patch(`/users/followers/${creator}`, followerId);

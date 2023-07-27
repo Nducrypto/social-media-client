@@ -13,17 +13,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getPost } from "../../actions/posts";
 import CommentSection from "./CommentSection";
 
-const Post = () => {
+const PostDetails = () => {
   const { post, isLoading } = useSelector((state) => state.allPosts);
   const dispatch = useDispatch();
   const theme = createTheme();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("profile"));
-  const userId = user?.result._id;
   useEffect(() => {
-    dispatch(getPost(id));
+    if (id) {
+      dispatch(getPost(id));
+    }
   }, [id, dispatch]);
 
   // ====LINEAR PROGRESS=====
@@ -47,11 +47,9 @@ const Post = () => {
   // ==== END OF LINEAR PROGRESS==
 
   const handleOpenCreatedBy = () => {
-    if (post.creator === userId) {
-      navigate("/account");
-    } else {
-      navigate(`/profile`, { state: { post: post } });
-    }
+    navigate(
+      `/profile?firstName=${post.firstName}&lastName=${post.lastName}&creator=${post.creator}`
+    );
   };
   if (!post) return null;
 
@@ -84,6 +82,7 @@ const Post = () => {
         borderRadius: "15px",
       }}
       elevation={6}
+      key={post._id}
     >
       <div
         style={{
@@ -102,48 +101,48 @@ const Post = () => {
             flex: 1,
           }}
         >
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <img
+                src={post?.profilePics}
+                style={{
+                  borderRadius: "50%",
+                  width: 50,
+                  height: 50,
+                  background: "grey",
+                }}
+                alt={post?.firstName?.charAt(0)}
+              />
+            </div>
+
+            <Typography variant="h6">
+              <div onClick={handleOpenCreatedBy}>
+                {`${post.firstName} ${post.lastName}`}
+              </div>
+            </Typography>
+          </div>
+          <Divider style={{ margin: "10px 0" }} />
+
           <Typography gutterBottom variant="body1" component="p">
             {post.message}
           </Typography>
-          <Typography variant="h6">
-            Created by:
-            <button
-              onClick={handleOpenCreatedBy}
-              style={{ textDecoration: "none", color: "#3f51b5" }}
-            >
-              {`${post.firstName} ${post.lastName}`}
-            </button>
-          </Typography>
-          <Typography variant="body1">
-            {moment(post.createdAt).fromNow()}
-          </Typography>
-          <Divider style={{ margin: "20px 0" }} />
-          <Divider style={{ margin: "20px 0" }} />
+          <Divider style={{ margin: "10px 0" }} />
+
+          <div>{moment(post.createdAt).fromNow()}</div>
+
           <CommentSection post={post} />
           <Divider style={{ margin: "20px 0" }} />
-        </div>
-        <div
-          style={{
-            marginLeft: "20px",
-            [theme.breakpoints.down("sm")]: {
-              marginLeft: 0,
-            },
-          }}
-        >
-          <img
-            style={{
-              borderRadius: "20px",
-              objectFit: "cover",
-              width: "100%",
-              maxHeight: "600px",
-            }}
-            src={post.selectedFile}
-            alt=""
-          />
         </div>
       </div>
     </Paper>
   );
 };
 
-export default Post;
+export default PostDetails;
