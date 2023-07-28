@@ -71,7 +71,7 @@ const Post = ({ post, setCurrentId }) => {
 
   return (
     <main className="tweets">
-      <div key={post._id} className="tweet">
+      <div className="tweet">
         <div className="tweet-content">
           <article className="user-info">
             <img onClick={viewProfile} src={post.profilePics} alt="" />

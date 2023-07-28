@@ -1,30 +1,40 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Button, CircularProgress, Grid } from "@mui/material";
+import React, { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import Post from "../Posts/Post/Post";
 import { getPostsByCreator } from "../../actions/posts";
 import { Box } from "@mui/system";
 import { getUser, follow } from "../../actions/auth";
-import Account from "../Account/Account";
+import "./profile.css";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
-
+  const navigate = useNavigate();
   const { profileposts, isLoading } = useSelector((state) => state.allPosts);
   const { singleUser } = useSelector((state) => state.authReducer);
 
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
+
+  // used this to make query request
   const creator = useQuery().get("creator");
 
+  let prevIdRef = useRef();
   useEffect(() => {
-    dispatch(getPostsByCreator(creator));
-    dispatch(getUser(creator));
-  }, [dispatch, creator]);
+    if (creator !== prevIdRef.current) {
+      // Update the prevIdRef with the current id
+      prevIdRef.current = creator;
+
+      if (creator) {
+        dispatch(getPostsByCreator(creator));
+        dispatch(getUser(creator));
+      }
+    }
+  }, [creator, dispatch]);
 
   function handleFollow() {
     dispatch(follow(creator, { followerId: user?.result?._id }));
@@ -86,7 +96,16 @@ const Profile = () => {
               follow
             </Button>
           ) : (
-            <Account />
+            <Button
+              onClick={() => navigate("/account")}
+              variant="contained"
+              sx={{
+                textTransform: "capitalize",
+                borderRadius: "1rem",
+              }}
+            >
+              edit Profile
+            </Button>
           )}
         </div>
       </Box>
@@ -97,10 +116,10 @@ const Profile = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "13rem",
+            marginTop: "5rem",
           }}
         >
-          <CircularProgress size="4rem" />
+          <div className="profile-custom-loader"></div>
         </div>
       ) : (
         <Grid

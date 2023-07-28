@@ -1,22 +1,13 @@
-import {
-  Container,
-  Paper,
-  Grid,
-  createTheme,
-  Button,
-  CircularProgress,
-  Box,
-} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser, updateUser, changePassword } from "../../actions/auth";
-import InputAuth from "../Auth/InputAuth";
+
 import FileBase from "react-file-base64";
 
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../../context/ContextProvider";
 import CustomizedSnackbar from "../SnackBar/SnackBar";
-
+import "./account.css";
 const Account = () => {
   const [error, setError] = useState(false);
   const { setSnackBarOpen } = useStateContext();
@@ -33,11 +24,11 @@ const Account = () => {
   const [password, setPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [editProfile, setEditProfile] = useState(false);
 
   const userId = user?.result?._id;
+  console.log(userId);
   const dispatch = useDispatch();
-  const theme = createTheme();
+
   const navigate = useNavigate();
 
   const { loading, isUserError, change_pass_loading } = useSelector(
@@ -92,177 +83,103 @@ const Account = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <CustomizedSnackbar message="Password Changed Successfully" />
-      <Button
-        onClick={() => setEditProfile((prev) => !prev)}
-        variant="contained"
-        sx={{
-          textTransform: "capitalize",
-          borderRadius: "1rem",
-        }}
-      >
-        {editProfile ? "cancel" : "edit Profile"}
-      </Button>
-
-      <Box
-        sx={{
-          textAlign: "center",
-        }}
-      >
-        <div style={{ padding: "0 1rem 0 1rem" }}>
-          <Container component="main" maxWidth="xs">
-            {editProfile && (
-              <Paper
-                elevation={6}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  padding: theme.spacing(2),
-                  marginTop: "1rem",
-                }}
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <input
-                      style={{
-                        width: "100%",
-                        height: "3rem",
-                        fontSize: "1.3rem",
-                        borderRadius: "1rem",
-                      }}
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <input
-                      style={{
-                        width: "100%",
-                        height: "3rem",
-                        fontSize: "1.3rem",
-                        borderRadius: "1rem",
-                      }}
-                      type="email"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <textarea
-                      style={{
-                        width: "100%",
-                        color: "black",
-
-                        fontSize: "1.3rem",
-                        borderRadius: "1rem",
-                      }}
-                      rows={4}
-                      placeholder="bio"
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                    />
-                  </Grid>
-
-                  <FileBase
-                    type="file"
-                    multiple={false}
-                    onDone={({ base64 }) => setProfilePics(base64)}
-                  />
-
-                  {loading ? (
-                    <CircularProgress />
-                  ) : (
-                    <Button
-                      fullWidth
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                      disabled={loading}
-                      style={{
-                        margin: theme.spacing(3, 0, 2),
-                        marginTop: theme.spacing(3),
-                      }}
-                      onClick={() => {
-                        handleSubmit();
-                      }}
-                    >
-                      submit
-                    </Button>
-                  )}
-
-                  <div>Change Password</div>
-                  <div style={{ marginRight: "3rem" }}>
-                    <div
-                      style={{
-                        marginTop: isUserError ? "1rem" : "",
-                        marginBottom: isUserError ? "0.5rem" : "",
-                      }}
-                    >
-                      {isUserError}
-                    </div>
-                    <div
-                      style={{
-                        marginTop: isUserError ? "1rem" : "",
-                        marginBottom: isUserError ? "0.5rem" : "",
-                      }}
-                    >
-                      {error && "Please Fill All The fields"}
-                    </div>
-                    <div style={{ marginBottom: "0.7rem" }}>
-                      <InputAuth
-                        // required
-                        label="OldPassword"
-                        value={oldPassword}
-                        onChange={(e) => {
-                          setError(false);
-                          setOldPassword(e.target.value);
-                          dispatch({ type: "NO_ERROR" });
-                        }}
-                      />
-                    </div>
-                    <div style={{ marginBottom: "0.7rem" }}>
-                      <InputAuth
-                        required
-                        label="Password"
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          dispatch({ type: "NO_ERROR" });
-                          setError(false);
-                        }}
-                      />
-                    </div>
-
-                    <InputAuth
-                      required
-                      label="ConfirmPassword"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        dispatch({ type: "NO_ERROR" });
-                        setError(false);
-                      }}
-                    />
-                    {change_pass_loading ? (
-                      <CircularProgress />
-                    ) : (
-                      <Button
-                        style={{ marginTop: "1rem" }}
-                        variant="contained"
-                        onClick={handleChangePassword}
-                      >
-                        submit
-                      </Button>
-                    )}
-                  </div>
-                </Grid>
-              </Paper>
-            )}
-          </Container>
+      {loading || change_pass_loading ? (
+        <div className="account-loader-container">
+          <div className="account-custom-loader"></div>
         </div>
-      </Box>
+      ) : null}
+      {/* Form */}
+      <div className="form-container">
+        <div className="form-wrapper">
+          {/* Input fields */}
+          <input
+            type="text"
+            className="input-field"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+          <input
+            type="email"
+            className="input-field"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+          <textarea
+            className="input-field textarea"
+            rows="4"
+            placeholder="Bio"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+          />
+          <div className="file-input-wrapper">
+            <label className="file-input-label">
+              <FileBase
+                className="file-input"
+                type="file"
+                multiple={false}
+                onDone={({ base64 }) => setProfilePics(base64)}
+              />
+            </label>
+          </div>
+
+          {/* Submit button */}
+          {!loading && (
+            <button
+              className="submit-button"
+              disabled={loading}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          )}
+          {isUserError}
+          {/* Change Password */}
+          <div className="change-password-label">Change Password</div>
+          <div className="error-message">
+            {" "}
+            {error && "Please Fill All The fields"}
+          </div>
+          <input
+            className="password-input"
+            placeholder="Old Password"
+            value={oldPassword}
+            onChange={(e) => {
+              setError(false);
+              setOldPassword(e.target.value);
+              dispatch({ type: "NO_ERROR" });
+            }}
+          />
+          <input
+            className="password-input"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              dispatch({ type: "NO_ERROR" });
+              setError(false);
+            }}
+          />
+          <input
+            className="password-input"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              dispatch({ type: "NO_ERROR" });
+              setError(false);
+            }}
+          />
+          {!change_pass_loading && (
+            <button className="submit-button" onClick={handleChangePassword}>
+              Submit
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,50 +1,31 @@
-import React, { useEffect, useState } from "react";
-import {
-  Paper,
-  Typography,
-  Divider,
-  createTheme,
-  LinearProgress,
-} from "@mui/material";
+import React, { useEffect } from "react";
+import { Divider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { getPost } from "../../actions/posts";
 import CommentSection from "./CommentSection";
-
+import { useRef } from "react";
+import "../Account/account.css";
 const PostDetails = () => {
   const { post, isLoading } = useSelector((state) => state.allPosts);
   const dispatch = useDispatch();
-  const theme = createTheme();
+
   const { id } = useParams();
   const navigate = useNavigate();
 
+  let prevIdRef = useRef();
   useEffect(() => {
-    if (id) {
-      dispatch(getPost(id));
+    if (id !== prevIdRef.current) {
+      // Update the prevIdRef with the current id
+      prevIdRef.current = id;
+
+      if (id) {
+        dispatch(getPost(id));
+      }
     }
   }, [id, dispatch]);
-
-  // ====LINEAR PROGRESS=====
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress === 100) {
-          return 0;
-        }
-        const diff = Math.random() * 10;
-        return Math.min(oldProgress + diff, 100);
-      });
-    }, 500);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-  // ==== END OF LINEAR PROGRESS==
 
   const handleOpenCreatedBy = () => {
     navigate(
@@ -55,43 +36,31 @@ const PostDetails = () => {
 
   if (isLoading) {
     return (
-      <Paper
-        elevation={6}
-        sx={{
-          marginTop: "6rem",
-        }}
-      >
-        <LinearProgress
-          sx={{
-            height: ".5rem",
+      <div className="account-loader-container">
+        <div
+          style={{
+            marginTop: "15rem",
           }}
-          variant="determinate"
-          value={progress}
-        />
-      </Paper>
+          className="account-custom-loader"
+        ></div>
+      </div>
     );
   }
 
   // const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
   return (
-    <Paper
+    <div
       style={{
-        marginTop: "6rem",
-        padding: "20px",
-        borderRadius: "15px",
+        marginTop: "4rem",
+        padding: "1rem",
       }}
-      elevation={6}
       key={post._id}
     >
       <div
         style={{
           display: "flex",
           width: "100%",
-          [theme.breakpoints.down("sm")]: {
-            flexWrap: "wrap",
-            flexDirection: "column",
-          },
         }}
       >
         <div
@@ -122,17 +91,13 @@ const PostDetails = () => {
               />
             </div>
 
-            <Typography variant="h6">
-              <div onClick={handleOpenCreatedBy}>
-                {`${post.firstName} ${post.lastName}`}
-              </div>
-            </Typography>
+            <div onClick={handleOpenCreatedBy} style={{ fontSize: "1.3rem" }}>
+              {`${post.firstName} ${post.lastName}`}
+            </div>
           </div>
           <Divider style={{ margin: "10px 0" }} />
 
-          <Typography gutterBottom variant="body1" component="p">
-            {post.message}
-          </Typography>
+          <div>{post.message}</div>
           <Divider style={{ margin: "10px 0" }} />
 
           <div>{moment(post.createdAt).fromNow()}</div>
@@ -141,7 +106,7 @@ const PostDetails = () => {
           <Divider style={{ margin: "20px 0" }} />
         </div>
       </div>
-    </Paper>
+    </div>
   );
 };
 

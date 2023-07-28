@@ -92,14 +92,14 @@ const Navbar = () => {
         icon={<AiOutlineMenu />}
       />
       {/* ======PROFILE=== */}
-      {user?.result && (
+      {/* {user?.result && (
         <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
-          {/* <img
+          <img
             src={user?.result.profilePics}
             className="rounded-full w-8 h-8"
             alt=""
             onClick={() => navigate("/account")}
-          /> */}
+          />
           <span
             onClick={() => navigate("/account")}
             style={{ color: "white" }}
@@ -108,7 +108,7 @@ const Navbar = () => {
             {user?.result.firstName} {user?.result.lastName}
           </span>
         </div>
-      )}
+      )} */}
       <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
         <Input
           sx={{

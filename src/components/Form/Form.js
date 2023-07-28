@@ -140,9 +140,11 @@ const Form = ({ currentId }) => {
           onChange={handleFileChange}
         />
 
-        <button className="post-button" onClick={handleSubmit}>
-          Tweet
-        </button>
+        {postData.message && (
+          <button className="post-button" onClick={handleSubmit}>
+            Tweet
+          </button>
+        )}
       </div>
       {postData.selectedFile && (
         <img src={postData.selectedFile} alt="" className="small-image" />

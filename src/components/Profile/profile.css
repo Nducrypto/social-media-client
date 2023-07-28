@@ -1,0 +1,26 @@
+.profile-custom-loader {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #766DF4;
+    border-radius: 50%;
+    display: grid;
+    animation: h1 1.5s infinite linear;
+    transform-origin: 50% 80%;
+  }
+  .profile-custom-loader:before,
+  .profile-custom-loader:after {
+    content:"";
+    grid-area: 1/1;
+    border:inherit;
+    border-radius: 50%;
+    animation: inherit;
+    animation-duration: 1s;
+    transform-origin: inherit;
+  }
+  .profile-custom-loader:after {
+    --s:-1;
+  }
+  
+  @keyframes h1 {
+     100% {transform:rotate(calc(var(--s,1)*1turn))}
+  }

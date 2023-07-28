@@ -111,3 +111,15 @@
     text-decoration: underline;
   }
   
+  @media (max-width: 600px) {
+    .comment-input {
+      padding: 10px;
+      font-size: 12px;
+     
+    }
+    .comment-button {
+      font-size: 10px;
+      cursor: pointer;
+    }
+    
+  }

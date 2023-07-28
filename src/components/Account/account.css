@@ -1,0 +1,111 @@
+.container {
+    margin-top: 7rem;
+  }
+  
+  .snackbar {
+    background-color: #43a047;
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .form-container {
+    text-align: center;
+    padding: 0 1rem 0 1rem;
+  }
+  
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+  
+  .input-field, .textarea, .password-input {
+    width: 100%;
+    height: 3rem;
+    font-size: 1.3rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+  }
+  
+  .textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .file-input-label {
+    padding: 0.5rem 1rem;
+    background-color: #2196F3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  
+  .submit-button {
+    width: 100%;
+    max-width: 200px;
+    height: 3rem;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  /* Loading  */
+  .account-loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .account-custom-loader {
+    width: 40px;
+    height: 10px;
+    color: #766DF4;
+    background:
+      radial-gradient(farthest-side,currentColor 90%,#0000) left  /10px 10px,
+      radial-gradient(farthest-side,currentColor 90%,#0000) center/10px 10px,
+      radial-gradient(farthest-side,currentColor 90%,#0000) right /10px 10px,
+      linear-gradient(currentColor 0 0) center/100% 4px; 
+    background-repeat: no-repeat;
+    position: relative;
+    animation: s6 2s infinite linear;
+  }
+  .account-custom-loader:before,
+  .account-custom-loader:after {
+    content: "";
+    position: absolute;
+    inset:0;
+    background:inherit;
+    animation:inherit;
+    --s:calc(50% - 5px);
+    animation-direction: reverse;
+  }
+  .account-custom-loader:after {
+    --s:calc(5px - 50%);
+  }
+  
+  @keyframes s6 {
+    0%   {transform: translate(var(--s,0)) rotate(0)}
+    100% {transform: translate(var(--s,0)) rotate(1turn)}
+  }

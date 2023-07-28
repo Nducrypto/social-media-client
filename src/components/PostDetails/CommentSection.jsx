@@ -9,7 +9,7 @@ const CommentSection = ({ post }) => {
   const [comment, setComment] = useState("");
   const [active, setActive] = useState(false);
   const [reply, setReply] = useState("");
-
+  console.log(reply);
   const [parentCommentId, setParentCommentId] = useState(""); // State to store the parentCommentId
   const [parentReplyId, setParentReplyId] = useState(""); // State to store the parentCommentId
 
@@ -71,9 +71,11 @@ const CommentSection = ({ post }) => {
                     placeholder="Reply to the comment..."
                     className="comment-input"
                   />
-                  <button className="comment-button" onClick={handleComment}>
-                    Reply
-                  </button>
+                  {reply.length && (
+                    <button className="comment-button" onClick={handleComment}>
+                      Reply
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -101,12 +103,14 @@ const CommentSection = ({ post }) => {
                         placeholder="Reply to the comment..."
                         className="comment-input"
                       />
-                      <button
-                        className="comment-button"
-                        onClick={handleComment}
-                      >
-                        Reply
-                      </button>
+                      {reply.length && (
+                        <button
+                          className="comment-button"
+                          onClick={handleComment}
+                        >
+                          Repl
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}
