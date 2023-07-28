@@ -47,6 +47,9 @@
   margin: 5px 0;
   font-size: 14px; 
 }
+.message-container{
+  cursor:pointer;
+}
 
 .tweet-content img.uploaded-image {
   max-width: 100%;

@@ -24,15 +24,13 @@ const Profile = () => {
   const creator = useQuery().get("creator");
 
   let prevIdRef = useRef();
-  useEffect(() => {
-    if (creator !== prevIdRef.current) {
-      // Update the prevIdRef with the current id
-      prevIdRef.current = creator;
 
-      if (creator) {
-        dispatch(getPostsByCreator(creator));
-        dispatch(getUser(creator));
-      }
+  useEffect(() => {
+    // to prevent uneccessary dispatch when creator is still the same
+    prevIdRef.current = creator;
+    if (creator && creator !== prevIdRef.current) {
+      dispatch(getPostsByCreator(creator));
+      dispatch(getUser(creator));
     }
   }, [creator, dispatch]);
 

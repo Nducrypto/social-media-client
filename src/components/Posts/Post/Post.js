@@ -11,6 +11,7 @@ import { likePost, deletePost } from "../../../actions/posts";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "./post.css";
+
 const Post = ({ post, setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
   const [likes, setLikes] = useState(post?.likes);
@@ -93,10 +94,11 @@ const Post = ({ post, setCurrentId }) => {
               ) : null}
             </div>
           </article>
+          <div onClick={openPost} className="message-container">
+            <p>{post.message}</p>
 
-          <p>{post.message}</p>
-
-          <img className="uploaded-image" src={post.selectedFile} alt="" />
+            <img className="uploaded-image" src={post.selectedFile} alt="" />
+          </div>
         </div>
         <article className="tweet-actions">
           {user?.result && (

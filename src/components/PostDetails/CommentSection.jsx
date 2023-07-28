@@ -8,8 +8,7 @@ const CommentSection = ({ post }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
   const [comment, setComment] = useState("");
   const [active, setActive] = useState(false);
-  const [reply, setReply] = useState("");
-  console.log(reply);
+  const [replyComment, setReplyComment] = useState("");
   const [parentCommentId, setParentCommentId] = useState(""); // State to store the parentCommentId
   const [parentReplyId, setParentReplyId] = useState(""); // State to store the parentCommentId
 
@@ -20,7 +19,7 @@ const CommentSection = ({ post }) => {
       commentPost(post._id, {
         firstName: user?.result?.firstName,
         lastName: user?.result?.lastName,
-        comment: comment || reply,
+        comment: comment || replyComment,
         parentCommentId: parentCommentId || null,
         parentReplyId: parentReplyId || null,
       })
@@ -29,7 +28,7 @@ const CommentSection = ({ post }) => {
     setComment("");
     setParentCommentId(null);
     setParentReplyId("");
-    setReply("");
+    setReplyComment("");
   };
 
   return (
@@ -67,11 +66,11 @@ const CommentSection = ({ post }) => {
               <div>
                 <div className="comment-input-container">
                   <input
-                    onChange={(e) => setReply(e.target.value)}
+                    onChange={(e) => setReplyComment(e.target.value)}
                     placeholder="Reply to the comment..."
                     className="comment-input"
                   />
-                  {reply.length && (
+                  {replyComment && (
                     <button className="comment-button" onClick={handleComment}>
                       Reply
                     </button>
@@ -99,11 +98,11 @@ const CommentSection = ({ post }) => {
                   <div>
                     <div className="comment-input-container">
                       <input
-                        onChange={(e) => setReply(e.target.value)}
+                        onChange={(e) => setReplyComment(e.target.value)}
                         placeholder="Reply to the comment..."
                         className="comment-input"
                       />
-                      {reply.length && (
+                      {replyComment && (
                         <button
                           className="comment-button"
                           onClick={handleComment}

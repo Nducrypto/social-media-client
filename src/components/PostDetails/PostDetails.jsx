@@ -16,14 +16,15 @@ const PostDetails = () => {
   const navigate = useNavigate();
 
   let prevIdRef = useRef();
-  useEffect(() => {
-    if (id !== prevIdRef.current) {
-      // Update the prevIdRef with the current id
-      prevIdRef.current = id;
 
-      if (id) {
-        dispatch(getPost(id));
-      }
+  // prevent uneccesary request by queryin only when id changes
+  useEffect(() => {
+    // Update the prevIdRef with the current id
+    prevIdRef.current = id;
+    // Check if the id has changed from the previous value
+    if (id && id !== prevIdRef.current) {
+      // Dispatch the action using the previous id
+      dispatch(getPost(id));
     }
   }, [id, dispatch]);
 
