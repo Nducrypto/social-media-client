@@ -192,7 +192,8 @@ const Navbar = () => {
                 }}
               >
                 <Typography variant="body2" sx={{ marginRight: 1 }}>
-                  {user?.result.firstName} {user?.result.lastName}
+                  Profile
+                  {/* {user?.result.firstName} {user?.result.lastName} */}
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleToogleMenu}>
