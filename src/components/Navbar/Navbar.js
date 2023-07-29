@@ -1,14 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { Button, IconButton, Input, Tooltip } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Button,
+  Menu,
+  MenuItem,
+  Tooltip,
+  useMediaQuery,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
+import { AccountCircle, Search, Settings } from "@mui/icons-material";
+
 import { getPostsBySearch } from "../../actions/posts";
-// import * as actionType from "../../constants/actionTypes";
 import { useStateContext } from "../../context/ContextProvider";
 import { LOGOUT } from "../../constants/actionTypes";
-// import LogoutPrompt from "./LogoutPrompt";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <Tooltip title={title} position="BottomCenter">
@@ -30,6 +40,7 @@ const Navbar = () => {
   const { search, setSearch, setActiveMenu, screenSize, setScreenSize } =
     useStateContext();
   const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("profile"));
 
@@ -64,13 +75,23 @@ const Navbar = () => {
     JSON.parse(localStorage.getItem("profile"));
   }, [location]);
 
-  useEffect(() => {
-    const handleResize = () => setScreenSize(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
+  const handleResize = useCallback(() => {
+    const newScreenSize = window.innerWidth;
+    setScreenSize(newScreenSize);
   }, [setScreenSize]);
+
+  useEffect(() => {
+    let resizeTimer;
+    const handleResizeWithDebounce = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleResize, 100);
+    };
+    window.addEventListener("resize", handleResizeWithDebounce);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResizeWithDebounce);
+    };
+  }, [handleResize]);
 
   useEffect(() => {
     if (screenSize <= 900) {
@@ -80,97 +101,138 @@ const Navbar = () => {
     }
   }, [setActiveMenu, screenSize]);
 
+  const handleToogleMenu = (event) => {
+    if (anchorEl) {
+      setAnchorEl(null);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
+  };
+
+  const viewProfile = () => {
+    navigate(
+      `/profile?firstName=${user?.result?.firstName}&lastName=${user?.result?.lastName}&creator=${user?.result?._id}`
+    );
+  };
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   return (
-    <nav
-      style={{ backgroundColor: "darkblue" }}
-      className="flex justify-between p-2 md:mx-6 relative w-900"
-    >
-      <NavButton
-        title="Menu"
-        customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
-        color="white"
-        icon={<AiOutlineMenu />}
-      />
-      {/* ======PROFILE=== */}
-      {/* {user?.result && (
-        <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
-          <img
-            src={user?.result.profilePics}
-            className="rounded-full w-8 h-8"
-            alt=""
-            onClick={() => navigate("/account")}
-          />
-          <span
-            onClick={() => navigate("/account")}
-            style={{ color: "white" }}
-            className=" font-bold mr-4 text-14"
-          >
-            {user?.result.firstName} {user?.result.lastName}
-          </span>
-        </div>
-      )} */}
-      <div className="flex items-center gap-2 cursor-pointer p-1 secondary-dark-bg rounded-lg">
-        <Input
-          sx={{
-            width: { xs: "6rem", md: "14rem", lg: "15rem", sm: "12rem" },
-            height: "2rem",
-            marginTop: "0.3rem",
-            backgroundColor: "white",
-          }}
-          onKeyDown={handleKeyPress}
-          className="placeholder:italic placeholder:text-slate-400 rounded-md py-2 pl-4 pr-3 focus:outline-none"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+    <AppBar position="static" sx={{ bgcolor: "darkblue" }}>
+      <Toolbar>
+        <NavButton
+          title="Menu"
+          customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
+          color="white"
+          icon={<AiOutlineMenu />}
         />
-        <IconButton
-          type="submit"
-          onClick={searchPost}
-          sx={{
-            color: "white",
-          }}
+        <Typography
+          onClick={() => navigate("/")}
+          variant="h6"
+          sx={{ flexGrow: 1, cursor: "pointer" }}
         >
-          <SearchIcon />
-        </IconButton>
-      </div>
-
-      {/* {prompt && <LogoutPrompt logout={logout} />} */}
-
-      {user?.result ? (
-        <div className="flex gap-2 items-center cursor-pointer p-1  secondary-dark-bg rounded-lg">
+          Mabench
+        </Typography>
+        {user?.result ? (
+          <div>
+            {isSmallScreen ? (
+              <InputBase
+                sx={{
+                  bgcolor: "common.white",
+                  ml: 2,
+                  borderRadius: "4px",
+                  flexGrow: 1,
+                  display: "flex",
+                  [(theme) => theme.breakpoints.down("sm")]: {
+                    display: "none",
+                  },
+                }}
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleKeyPress}
+                startAdornment={
+                  <Search
+                    cursor="pointer"
+                    color="action"
+                    onClick={searchPost}
+                  />
+                }
+              />
+            ) : (
+              <InputBase
+                sx={{
+                  bgcolor: "common.white",
+                  ml: 2,
+                  borderRadius: "4px",
+                  flexGrow: 1,
+                }}
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleKeyPress}
+                startAdornment={<Search color="action" onClick={searchPost} />}
+              />
+            )}
+          </div>
+        ) : null}
+        {user?.result ? (
+          <div>
+            <IconButton color="inherit" onClick={handleToogleMenu}>
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleToogleMenu}
+            >
+              <MenuItem
+                onClick={(e) => {
+                  handleToogleMenu(e);
+                  viewProfile();
+                }}
+              >
+                <Typography variant="body2" sx={{ marginRight: 1 }}>
+                  {user?.result.firstName} {user?.result.lastName}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleToogleMenu}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    color: "error.contrastText",
+                    backgroundColor: "error.main",
+                    textTransform: "none",
+                  }}
+                  onClick={() => logout()}
+                >
+                  Logout
+                </Button>
+              </MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  handleToogleMenu(e);
+                  navigate("/account");
+                }}
+              >
+                <IconButton color="inherit">
+                  <Settings />
+                </IconButton>
+                <Typography variant="body2">Settings</Typography>
+              </MenuItem>
+            </Menu>
+          </div>
+        ) : (
           <Button
-            size="small"
-            sx={{
-              textTransform: "capitalize",
-              backgroundColor: "red",
-            }}
             variant="contained"
-            onClick={() => {
-              logout();
-              //   setPrompt(true);
-            }}
-            className="text-red-700 font-bold ml-1 text-14"
+            color="secondary"
+            sx={{ textTransform: "capitalize" }}
+            onClick={() => navigate("/auth")}
           >
-            Logout
+            SignIn
           </Button>
-        </div>
-      ) : (
-        <div className="flex items-center gap-2 cursor-pointer p-1  rounded-lg">
-          {/* <p> */}
-          <Button
-            size="small"
-            sx={{ textTransform: "lowerCase", marginLeft: "-1rem" }}
-            variant="contained"
-            onClick={() => {
-              navigate("/auth");
-            }}
-            className="text-gray-400 font-bold ml-1 text-14"
-          >
-            singIn
-          </Button>
-        </div>
-      )}
-    </nav>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 

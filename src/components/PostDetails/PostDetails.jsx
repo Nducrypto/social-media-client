@@ -1,32 +1,18 @@
-import React, { useEffect } from "react";
 import { Divider } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getPost } from "../../actions/posts";
 import CommentSection from "./CommentSection";
-import { useRef } from "react";
+
 import "../Account/account.css";
+
 const PostDetails = () => {
-  const { post, isLoading } = useSelector((state) => state.allPosts);
-  const dispatch = useDispatch();
+  const { posts, isLoading } = useSelector((state) => state.allPosts);
 
   const { id } = useParams();
   const navigate = useNavigate();
-
-  let prevIdRef = useRef();
-
-  // prevent uneccesary request by queryin only when id changes
-  useEffect(() => {
-    // Update the prevIdRef with the current id
-    prevIdRef.current = id;
-    // Check if the id has changed from the previous value
-    if (id && id !== prevIdRef.current) {
-      // Dispatch the action using the previous id
-      dispatch(getPost(id));
-    }
-  }, [id, dispatch]);
+  const post = posts?.find((item) => id && item._id === id);
 
   const handleOpenCreatedBy = () => {
     navigate(

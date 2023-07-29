@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import Post from "../Posts/Post/Post";
-import { getPostsByCreator } from "../../actions/posts";
 import { Box } from "@mui/system";
 import { getUser, follow } from "../../actions/auth";
 import "./profile.css";
@@ -13,7 +12,8 @@ const Profile = () => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
   const navigate = useNavigate();
-  const { profileposts, isLoading } = useSelector((state) => state.allPosts);
+  const { posts, isLoading } = useSelector((state) => state.allPosts);
+
   const { singleUser } = useSelector((state) => state.authReducer);
 
   const useQuery = () => {
@@ -23,15 +23,10 @@ const Profile = () => {
   // used this to make query request
   const creator = useQuery().get("creator");
 
-  let prevIdRef = useRef();
+  const profileposts = posts?.filter((item) => item.creator.includes(creator));
 
   useEffect(() => {
-    // to prevent uneccessary dispatch when creator is still the same
-    prevIdRef.current = creator;
-    if (creator && creator !== prevIdRef.current) {
-      dispatch(getPostsByCreator(creator));
-      dispatch(getUser(creator));
-    }
+    dispatch(getUser(creator));
   }, [creator, dispatch]);
 
   function handleFollow() {

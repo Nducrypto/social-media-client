@@ -5,7 +5,7 @@ const StateContext = createContext();
 export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [search, setSearch] = useState("");
-  const [screenSize, setScreenSize] = useState(undefined);
+  const [screenSize, setScreenSize] = useState(null);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   return (

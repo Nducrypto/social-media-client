@@ -1,8 +1,6 @@
 import {
   FETCH_ALL,
   FETCH_BY_SEARCH,
-  FETCH_BY_CREATOR,
-  FETCH_POST,
   CREATE,
   UPDATE,
   DELETE,
@@ -16,9 +14,8 @@ const allPosts = (
   allPosts = {
     isLoading: false,
     posts: [],
-    post: {},
+
     searchposts: [],
-    profileposts: [],
   },
   action
 ) => {
@@ -34,12 +31,10 @@ const allPosts = (
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
-    case FETCH_BY_CREATOR:
-      return { ...allPosts, profileposts: action.payload };
+
     case FETCH_BY_SEARCH:
       return { ...allPosts, posts: action.payload };
-    case FETCH_POST:
-      return { ...allPosts, post: action.payload.post };
+
     case LIKE:
       return {
         ...allPosts,
@@ -49,14 +44,21 @@ const allPosts = (
       };
 
     case COMMENT:
-      if (action.payload._id === allPosts.post._id) {
-        return {
-          ...allPosts,
-          post: action.payload,
-        };
-      } else {
-        return allPosts.post;
-      }
+      const updatedPosts = allPosts.posts.map((post) => {
+        if (post._id === action.payload._id) {
+          return {
+            ...post,
+            // Update the comment field or any other fields you want to modify
+            comments: action.payload.comments,
+          };
+        }
+        return post; // Return unchanged post for other posts
+      });
+
+      return {
+        ...allPosts,
+        posts: updatedPosts,
+      };
 
     case CREATE:
       return { ...allPosts, posts: [...allPosts.posts, action.payload] };

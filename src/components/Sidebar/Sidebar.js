@@ -1,10 +1,10 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { MdOutlineCancel } from "react-icons/md";
 import { links } from "./Links";
 import { Tooltip } from "@mui/material";
-// import Auth from "../Auth/Auth";
-import { useStateContext } from "../../context/ContextProvider";
 
+import { useStateContext } from "../../context/ContextProvider";
+import mabench from "../../asset/mabench.png";
 const Sidebar = () => {
   const { activeMenu, setActiveMenu, screenSize } = useStateContext();
   const location = useLocation();
@@ -31,19 +31,6 @@ const Sidebar = () => {
     }
   };
 
-  // ====BACKGROUNDCOLOR
-  // const handleBackgroundColor = (item) => {
-  //   if ((item & currentColor) & (item === "Home")) {
-  //     return "orange";
-  //   } else if ((item === currentColor) & (item === "Account")) {
-  //     return "orange";
-  //   } else if ((item === currentColor) & (item === "FAQ")) {
-  //     return "orange";
-  //   } else {
-  //     return "darkgrey";
-  //   }
-  // };
-
   const activeLink = "flex  pl-4 rounded-lg text-md m-2";
 
   const normalLink = "flex  pl-4 rounded-lg   hover:bg-secondary-dark-bg m-2";
@@ -68,19 +55,17 @@ const Sidebar = () => {
                 <MdOutlineCancel />
               </button>
             </Tooltip>
-            {/* <Auth /> */}
           </>
         ) : (
           activeMenu && (
             <>
               <div className="flex justify-between items-center gap-3">
-                <Link
-                  to="/"
+                <img
+                  src={mabench}
+                  alt=""
                   onClick={handleCloseSidebar}
-                  className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight text-slate-900"
-                >
-                  <span style={{ color: "white" }}>Mabench</span>
-                </Link>
+                  style={{ height: "5rem" }}
+                />
 
                 <Tooltip title="Menu" position="BottomCenter">
                   <button
@@ -88,7 +73,7 @@ const Sidebar = () => {
                     onClick={() =>
                       setActiveMenu((prevActiveMenu) => !prevActiveMenu)
                     }
-                    className="text-xl rounded-full p-3 mt-4 block "
+                    className="text-xl rounded-full p-3 mt-4 block float-right"
                   >
                     <MdOutlineCancel />
                   </button>

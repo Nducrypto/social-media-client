@@ -29,6 +29,7 @@ const CommentSection = ({ post }) => {
     setParentCommentId(null);
     setParentReplyId("");
     setReplyComment("");
+    setActive(false);
   };
 
   return (
@@ -49,83 +50,92 @@ const CommentSection = ({ post }) => {
 
       {/* Display comments and reply button */}
       <div className="comments-container">
-        {post.comments?.map((comment) => (
-          <div key={comment._id} className="comments">
-            <div
-              className="div-click"
-              onClick={() => {
-                setParentCommentId(comment._id);
-                setActive((prev) => !prev);
-              }}
-            >
-              <p>{comment.author}</p>
-              <p>{comment.text}</p>
-            </div>
-
-            {parentCommentId === comment._id && active && (
-              <div>
-                <div className="comment-input-container">
-                  <input
-                    onChange={(e) => setReplyComment(e.target.value)}
-                    placeholder="Reply to the comment..."
-                    className="comment-input"
-                  />
-                  {replyComment && (
-                    <button className="comment-button" onClick={handleComment}>
-                      Reply
-                    </button>
-                  )}
-                </div>
+        {post.comments
+          ?.map((comment) => (
+            <div key={comment._id} className="comments">
+              <div
+                className="div-click"
+                onClick={() => {
+                  setParentCommentId(comment._id);
+                  setActive((prev) => !prev);
+                }}
+              >
+                <p>{comment.author}</p>
+                <p>{comment.text}</p>
               </div>
-            )}
-            {comment?.replies?.map((reply) => (
-              <div key={reply._id} className="replies">
-                <div
-                  className="div-click"
-                  onClick={() => {
-                    setParentReplyId((prev) =>
-                      prev === reply._id ? "" : reply._id
-                    );
-                    setParentCommentId(comment._id);
-                  }}
-                >
-                  <p>{reply.author}</p>
 
-                  <p>{reply.text}</p>
-                </div>
-
-                {parentReplyId === reply._id && (
-                  <div>
-                    <div className="comment-input-container">
-                      <input
-                        onChange={(e) => setReplyComment(e.target.value)}
-                        placeholder="Reply to the comment..."
-                        className="comment-input"
-                      />
-                      {replyComment && (
-                        <button
-                          className="comment-button"
-                          onClick={handleComment}
-                        >
-                          Repl
-                        </button>
-                      )}
-                    </div>
+              {parentCommentId === comment._id && active && (
+                <div>
+                  <div className="comment-input-container">
+                    <input
+                      onChange={(e) => setReplyComment(e.target.value)}
+                      placeholder="Reply to the comment..."
+                      className="comment-input"
+                    />
+                    {replyComment && (
+                      <button
+                        className="comment-button"
+                        onClick={handleComment}
+                      >
+                        Reply
+                      </button>
+                    )}
                   </div>
-                )}
-                <p>
-                  {reply.subReply.map((sub, index) => (
-                    <div key={index} className="subReplies">
-                      <div>{reply.author}</div>
+                </div>
+              )}
+              {comment?.replies
+                ?.map((reply) => (
+                  <div key={reply._id} className="replies">
+                    <div
+                      className="div-click"
+                      onClick={() => {
+                        setParentReplyId((prev) =>
+                          prev === reply._id ? "" : reply._id
+                        );
+                        setParentCommentId(comment._id);
+                      }}
+                    >
+                      <p>{reply.author}</p>
 
-                      <div>{sub?.text}</div>
+                      <p>{reply.text}</p>
                     </div>
-                  ))}
-                </p>
-              </div>
-            ))}
-          </div>
-        ))}
+
+                    {parentReplyId === reply._id && (
+                      <div>
+                        <div className="comment-input-container">
+                          <input
+                            onChange={(e) => setReplyComment(e.target.value)}
+                            placeholder="Reply to the comment..."
+                            className="comment-input"
+                          />
+                          {replyComment && (
+                            <button
+                              className="comment-button"
+                              onClick={handleComment}
+                            >
+                              Repl
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <p>
+                      {reply.subReply
+                        .map((sub, index) => (
+                          <div key={index} className="subReplies">
+                            <div>{reply.author}</div>
+
+                            <div>{sub?.text}</div>
+                          </div>
+                        ))
+                        .reverse()}
+                    </p>
+                  </div>
+                ))
+                .reverse()}
+            </div>
+          ))
+          .reverse()}
       </div>
     </div>
   );
