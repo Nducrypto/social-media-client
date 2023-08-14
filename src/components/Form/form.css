@@ -16,6 +16,7 @@
   }
   
   .profile-pic {
+    display: none;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -78,4 +79,15 @@
   .upload-button{
   
     margin-top: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .profile-pic {
+      display: block;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
   }

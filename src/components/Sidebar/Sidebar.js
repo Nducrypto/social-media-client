@@ -4,7 +4,7 @@ import { links } from "./Links";
 import { Tooltip } from "@mui/material";
 
 import { useStateContext } from "../../context/ContextProvider";
-import mabench from "../../asset/mabench.png";
+
 const Sidebar = () => {
   const { activeMenu, setActiveMenu, screenSize } = useStateContext();
   const location = useLocation();
@@ -60,13 +60,7 @@ const Sidebar = () => {
           activeMenu && (
             <>
               <div className="flex justify-between items-center gap-3">
-                <img
-                  src={mabench}
-                  alt=""
-                  onClick={handleCloseSidebar}
-                  style={{ height: "5rem" }}
-                />
-
+                {user.result?.firstName}
                 <Tooltip title="Menu" position="BottomCenter">
                   <button
                     type="button"

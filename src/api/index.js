@@ -24,6 +24,8 @@ export const likePost = (id, userId) =>
 
 export const comment = (id, value) =>
   API.post(`/posts/${id}/commentPost`, value);
+export const deletecomment = (id, value) =>
+  API.post(`/posts/deleteComment/${id}`, value);
 
 // i received two params here (id, updatePost) cos we nid to knw d ID of d specific post we are updtin
 export const updatePost = (id, updatedPost) =>

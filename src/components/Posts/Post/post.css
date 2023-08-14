@@ -1,4 +1,7 @@
-/* Tweets.css */
+
+
+
+
 .tweets {
   display: flex;
   flex-direction: column;
@@ -54,7 +57,7 @@
 .tweet-content img.uploaded-image {
   max-width: 100%;
   height: auto;
-  /* margin: 5px 0; */
+ 
 }
 
 
@@ -73,40 +76,8 @@
   margin-left: auto; 
 }
 
-/* Media Query for small devices (e.g., mobile phones) */
-@media (max-width: 768px) {
-  .tweets {
-    width: 100%;
-  }
-  
-  .tweet-content img.uploaded-image {
-    max-width: 100%;
-    height: auto;
-    margin: 5px 0; 
-  }
-
-  .tweet {
-    padding: 10px;
-  }
-
-  .tweet-content strong {
-    font-size: 14px; 
-  }
-  .moment{
-    font-size: 12px;
-  
-  }
-  .tweet-content p {
-    font-size: 12px; 
-  }
-
-  .tweet-actions {
-    margin-top: 10px; 
-  }
-}
 
 
-/* Loading Animation */
 .post-loader-container {
   display: flex;
   justify-content: center;
@@ -148,3 +119,36 @@
 @keyframes d9-2 {
     100%{transform:translateX(12px) rotate(-180deg) translateX(12px)}
 }
+
+@media (max-width: 768px) {
+ 
+  .tweets {
+    width: 100%;
+  }
+  
+  .tweet-content img.uploaded-image {
+    max-width: 100%;
+    height: auto;
+    margin: 5px 0; 
+  }
+
+  .tweet {
+    padding: 10px;
+  }
+
+  .tweet-content strong {
+    font-size: 14px; 
+  }
+  .moment{
+    font-size: 12px;
+  
+  }
+  .tweet-content p {
+    font-size: 12px; 
+  }
+
+  .tweet-actions {
+    margin-top: 10px; 
+  }
+}
+

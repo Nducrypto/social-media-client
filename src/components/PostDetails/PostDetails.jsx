@@ -40,7 +40,6 @@ const PostDetails = () => {
     <div
       style={{
         marginTop: "4rem",
-        padding: "1rem",
       }}
       key={post._id}
     >
@@ -57,7 +56,7 @@ const PostDetails = () => {
             flex: 1,
           }}
         >
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex", gap: "1rem", padding: "0.6rem" }}>
             <div
               style={{
                 display: "flex",

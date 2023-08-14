@@ -1,125 +1,122 @@
-/* Styling for the comment input container */
+
+.comments-container {
+  padding: 3px;
+}
+
+.comment {
+  position: relative;
+  margin: 10px ;
+  width: 100%;
+ 
+}
+
+.comment-header {
+  cursor: pointer;
+}
+
+.delete-comment{
+  float: right;
+  margin-right: 4rem;
+}
+
+.author {
+  font-weight: bold;
+  margin-left: 3px;
+  
+}
+
+.comment-text {
+  margin-top: 2px;
+  margin-left: 5px;
+   max-width: 80%; 
+  word-wrap: break-word;
+}
+
 .comment-input-container {
-    display: flex;
-    align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  
-  /* Styling for the comment input field */
-  .comment-input {
-    flex: 1;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Styling for the comment button */
-  .comment-button {
-    margin-left: 10px;
-    padding: 5px 20px;
-    background-color: #1da1f2;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* Hover effect for the comment button */
-  .comment-button:hover {
-    background-color: #0c87b8;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; 
+}
+
+.comment-input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px; 
+}
+
+.comment-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 30%;
+  margin: 3px 0 0 25%;
+
+}
+
+.comment-button:hover {
+  background-color: #0056b3;
+}
+
+.comment:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #ccc;
+  transform: translateX(-50%);
+}
+
+
+@media screen and (max-width: 768px) {
+  .comment {
+    padding: 2px;
+    margin: 2px;
   }
 
-  /* click to open input comment  */
-  .div-click{
-    cursor: pointer;
+  .comment-text {
+    margin-top: 2px; 
+    max-width: 20rem; 
+    word-wrap: break-word;
+   
   }
-  
-/* Styling for comments container */
-.comments-container {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+  .delete-comment{
+    margin-right: 0;
   }
-  
-  /* Styling for individual comments */
-  .comments {
-    border: 1px solid #e1e8ed;
-    background-color: #f5f8fa;
-    margin-bottom: 10px;
-    padding: 10px;
+  .comment-input {
+   width: 100%; 
   }
-  
-  /* Styling for comment author */
-  .comments p:nth-child(1) {
-    font-weight: bold;
+
+  .comment-button {
+    margin-top: 2px; 
+
+    padding: 1px 2px;
   }
-  
-  /* Styling for comment text */
-  .comments p:nth-child(2) {
-    margin-top: 5px;
+}
+@media screen and (max-width: 375px) {
+  .comment {
+    padding: 2px;
+    margin: 2px 0 0 0;
   }
-  
-  /* Styling for replies container */
-  .replies {
-    margin-top: 10px;
-    padding-left: 20px;
-    border-left: 1px solid #e1e8ed;
+
+  .comment-text {
+    margin-top: 2px;
+    max-width: 13rem; 
+    word-wrap: break-word;
   }
-  
-  /* Styling for reply author */
-  .replies p:nth-child(1) {
-    font-weight: bold;
+ 
+
+  .comment-input {
+   width: 100%; 
   }
-  
-  /* Styling for reply text */
-  .replies p:nth-child(2) {
-    margin-top: 5px;
+
+  .comment-button {
+    margin: 3px 0 0 25%;
+    width: 50%;
   }
-  
-  /* Styling for sub-replies container */
-  .subReplies {
-    margin-top: 10px;
-    padding-left: 20px;
-    border-left: 1px solid #e1e8ed;
-  }
-  
-  /* Styling for sub-reply author */
-  .subReplies div:nth-child(1) {
-    font-weight: bold;
-  }
-  
-  /* Styling for sub-reply text */
-  .subReplies div:nth-child(2) {
-    margin-top: 5px;
-  }
-  
-  /* Styling for reply and sub-reply buttons */
-  button {
-    background-color: transparent;
-    color: #1da1f2;
-    border: none;
-    cursor: pointer;
-    margin-top: 5px;
-  }
-  
-  button:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 600px) {
-    .comment-input {
-      padding: 10px;
-      font-size: 12px;
-     
-    }
-    .comment-button {
-      font-size: 10px;
-      cursor: pointer;
-    }
-    
-  }
+}

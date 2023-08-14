@@ -47,7 +47,7 @@ export const signup = (formData, navigate) => async (dispatch) => {
 export const getUsers = () => async (dispatch) => {
   try {
     const { data } = await api.fetchUsers();
-    console.log(data);
+
     dispatch({ type: FETCH_USERS, payload: data });
   } catch (err) {
     dispatch({ type: IS_USER_ERROR, payload: err.response.data.message });
@@ -57,6 +57,7 @@ export const getUsers = () => async (dispatch) => {
 export const getUser = (id) => async (dispatch) => {
   try {
     const { data } = await api.fetchUser(id);
+
     dispatch({ type: FETCH_USER_BY_ID, payload: data });
   } catch (err) {
     dispatch({ type: IS_USER_ERROR, payload: err.response.data.message });

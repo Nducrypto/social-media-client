@@ -42,6 +42,7 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
 };
 
 export const createPost = (post) => async (dispatch) => {
+  console.log(post);
   try {
     const { data } = await api.createPost(post);
 
@@ -50,7 +51,15 @@ export const createPost = (post) => async (dispatch) => {
     console.log(err.response.data.message);
   }
 };
+export const deletePost = (id) => async (dispatch) => {
+  try {
+    await api.deletePost(id);
 
+    dispatch({ type: DELETE, payload: id });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const updatePost = (id, post) => async (dispatch) => {
   try {
     const { data } = await api.updatePost(id, post);
@@ -82,12 +91,12 @@ export const commentPost = (id, value) => async (dispatch) => {
     console.log(error);
   }
 };
-
-export const deletePost = (id) => async (dispatch) => {
+export const deleteComment = (id, value) => async (dispatch) => {
+  console.log(value);
   try {
-    await await api.deletePost(id);
-
-    dispatch({ type: DELETE, payload: id });
+    const { data } = await api.deletecomment(id, value);
+    dispatch({ type: COMMENT, payload: data });
+    // return data.comments;
   } catch (error) {
     console.log(error);
   }

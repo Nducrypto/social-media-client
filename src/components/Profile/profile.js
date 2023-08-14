@@ -24,7 +24,7 @@ const Profile = () => {
   const creator = useQuery().get("creator");
 
   const profileposts = posts?.filter((item) => item.creator.includes(creator));
-
+  console.log(profileposts);
   useEffect(() => {
     dispatch(getUser(creator));
   }, [creator, dispatch]);
@@ -32,7 +32,6 @@ const Profile = () => {
   function handleFollow() {
     dispatch(follow(creator, { followerId: user?.result?._id }));
   }
-  if (!profileposts.length && !isLoading) return "No posts";
 
   return (
     <div>
@@ -64,6 +63,7 @@ const Profile = () => {
               alt={singleUser?.firstName?.charAt(0)}
             />
           </div>
+          email
           <p style={{ fontSize: "0.9rem" }}>{singleUser?.email} </p>
           <p>
             {singleUser?.firstName} {singleUser?.lastName}{" "}
@@ -122,13 +122,17 @@ const Profile = () => {
           alignItems="center"
           spacing={3}
         >
-          {profileposts?.map((post) => (
-            <Grid key={post._id} item xs={10} sm={8} md={8} lg={7}>
-              <>
-                <Post post={post} />
-              </>
-            </Grid>
-          ))}
+          {!profileposts.length && !isLoading ? (
+            <div>No Post</div>
+          ) : (
+            profileposts?.map((post) => (
+              <Grid key={post._id} item xs={10} sm={8} md={8} lg={7}>
+                <>
+                  <Post post={post} />
+                </>
+              </Grid>
+            ))
+          )}
         </Grid>
       )}
     </div>

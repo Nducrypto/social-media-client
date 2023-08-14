@@ -96,8 +96,6 @@ const Navbar = () => {
   useEffect(() => {
     if (screenSize <= 900) {
       setActiveMenu(false);
-    } else {
-      setActiveMenu(true);
     }
   }, [setActiveMenu, screenSize]);
 
@@ -114,17 +112,22 @@ const Navbar = () => {
       `/profile?firstName=${user?.result?.firstName}&lastName=${user?.result?.lastName}&creator=${user?.result?._id}`
     );
   };
+
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
     <AppBar position="static" sx={{ bgcolor: "darkblue" }}>
       <Toolbar>
-        <NavButton
-          title="Menu"
-          customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
-          color="white"
-          icon={<AiOutlineMenu />}
-        />
+        {isSmallScreen && (
+          <NavButton
+            title="Menu"
+            customFunc={() =>
+              setActiveMenu((prevActiveMenu) => !prevActiveMenu)
+            }
+            color="white"
+            icon={<AiOutlineMenu />}
+          />
+        )}
         <Typography
           onClick={() => navigate("/")}
           variant="h6"

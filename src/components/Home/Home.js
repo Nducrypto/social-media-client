@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Grow, Paper, createTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
-import Posts from "../Posts/Posts";
+import Display from "../Posts/Display";
 import Form from "../Form/Form";
 import Pagination from "../Pagination";
 // import { useSelector } from "react-redux";
@@ -35,7 +35,7 @@ const Home = () => {
             <Form currentId={currentId} setCurrentId={setCurrentId} />
           </div>
           <div>
-            <Posts setCurrentId={setCurrentId} />
+            <Display setCurrentId={setCurrentId} />
           </div>
 
           <div>
