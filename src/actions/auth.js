@@ -107,6 +107,7 @@ export const changePassword =
   };
 
 export const follow = (creator, followerId) => async (dispatch) => {
+  console.log(creator);
   try {
     const { data } = await api.follow(creator, followerId);
 

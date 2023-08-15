@@ -1,30 +1,29 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Grid } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Post from "../Posts/Post/Post";
 import { Box } from "@mui/system";
 import { getUser, follow } from "../../actions/auth";
 import "./profile.css";
+import { following } from "../../Utils/Following";
+import { useStateContext } from "../../context/ContextProvider";
 
 const Profile = () => {
+  const { singleUser, allUsers, posts, isLoading } = useStateContext();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
   const navigate = useNavigate();
-  const { posts, isLoading } = useSelector((state) => state.allPosts);
-
-  const { singleUser } = useSelector((state) => state.authReducer);
 
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
 
-  // used this to make query request
   const creator = useQuery().get("creator");
 
   const profileposts = posts?.filter((item) => item.creator.includes(creator));
-  console.log(profileposts);
+
   useEffect(() => {
     dispatch(getUser(creator));
   }, [creator, dispatch]);
@@ -73,6 +72,7 @@ const Profile = () => {
             {singleUser?.followers?.length}{" "}
             {singleUser?.followers?.length > 1 ? "followers" : "follower"}
           </div>
+          <div> {following(allUsers, creator).length} following </div>
         </div>
 
         <div>
@@ -86,7 +86,9 @@ const Profile = () => {
                 borderRadius: "1rem",
               }}
             >
-              follow
+              {singleUser?.followers?.includes(user?.result._id)
+                ? "Unfollow"
+                : "Follow"}
             </Button>
           ) : (
             <Button

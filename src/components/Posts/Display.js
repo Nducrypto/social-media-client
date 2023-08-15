@@ -4,6 +4,7 @@ import "./display.css";
 import Post from "./Post/Post";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../../actions/auth";
+import { following } from "../../Utils/Following";
 
 const Display = ({ setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -21,13 +22,6 @@ const Display = ({ setCurrentId }) => {
   const dispatch = useDispatch();
 
   const creator = user?.result._id;
-
-  const following = () => {
-    for (const user of allUsers) {
-      const matchingIds = user?.followers.filter((id) => id === creator);
-      return matchingIds;
-    }
-  };
 
   const viewProfile = () => {
     navigate(
@@ -62,7 +56,7 @@ const Display = ({ setCurrentId }) => {
             {singleUser?.followers?.length > 1 ? "followers" : "follower"}
           </div>
           <div className="following">
-            <span>{following()?.length}</span> Following
+            <span>{following(allUsers, creator)?.length}</span> Following
           </div>
         </div>
       </div>

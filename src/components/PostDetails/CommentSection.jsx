@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import { commentPost, deleteComment } from "../../actions/posts";
 import "./comment.css";
 
@@ -15,69 +15,86 @@ const CommentSection = ({ post }) => {
 
   const dispatch = useDispatch();
 
+  const firstName = user?.result?.firstName;
+  const lastName = user?.result?.lastName;
+  const userId = user?.result._id;
+  const isAdmin = user?.result.isAdmin;
+  console.log(isAdmin);
   //  recursive function to display comments
-  const handleDisplay = (comments) => {
+  const displayComments = (comments) => {
     return (
       <div className="comments-container">
         {comments?.map((comment) => (
           <div key={comment._id} className="comment">
             <div className="comment-header">
-              <button
-                onClick={() =>
-                  dispatch(deleteComment(post._id, { commentId: comment._id }))
-                }
-                className="delete-comment"
-              >
-                <DeleteIcon
-                  fontSize="small"
-                  style={{ cursor: "pointer", color: "darkRed" }}
-                />
-              </button>
-              <p
-                className="author"
-                onClick={() => {
-                  setParentCommentId(comment._id);
-                }}
-              >
-                {comment.userName}
-                <span style={{ fontSize: "1rem" }}>
-                  {" "}
-                  {comment.comments.length} reply
+              <div className="comment-header-left">
+                <p className="author">
+                  {comment.userName}
+                  {""}
+                  {comment.isAdmin && (
+                    <VerifiedUserIcon
+                      sx={{ fontSize: "1rem", color: "blue" }}
+                    />
+                  )}
+                </p>
+                <span className="num-replies">
+                  {comment.comments.length} replies
                 </span>
-              </p>
-              <div
-                className="comment-text"
-                onClick={() => {
-                  setParentCommentId(comment._id);
-                }}
-              >
-                <p>{comment.text}</p>
+              </div>
+              {comment.userId === user.result._id && (
+                <button
+                  onClick={() =>
+                    dispatch(
+                      deleteComment(post._id, { commentId: comment._id })
+                    )
+                  }
+                  className="delete-comment"
+                >
+                  <DeleteIcon
+                    fontSize="small"
+                    style={{ cursor: "pointer", color: "darkRed" }}
+                  />
+                </button>
+              )}
+            </div>
+            <div className="comment-text">
+              <p>{comment.text}</p>
+              <div className="like-reply-section">
+                {/* <button className="like-button">Like</button> */}
+                <button
+                  className="reply-button"
+                  onClick={() => setParentCommentId(comment._id)}
+                >
+                  Reply
+                </button>
               </div>
             </div>
             {parentCommentId === comment._id && (
               <div className="comment-input-container">
                 <input
                   value={replyComment[comment._id] || ""}
-                  onChange={(e) => {
+                  onChange={(e) =>
                     setReplyComment((prevStates) => ({
                       ...prevStates,
                       [comment._id]: e.target.value,
-                    }));
-                  }}
+                    }))
+                  }
                   placeholder="Reply to the comment..."
                   className="comment-input"
                 />
-                <button
-                  className="comment-button"
-                  onClick={() => {
-                    handleComment(replyComment[comment._id]);
-                  }}
-                >
-                  Reply
-                </button>
+                {replyComment[comment._id] && (
+                  <button
+                    className="comment-button"
+                    onClick={() => {
+                      handleComment(replyComment[comment._id]);
+                    }}
+                  >
+                    Reply
+                  </button>
+                )}
               </div>
             )}
-            {handleDisplay(comment.comments)}
+            {displayComments(comment.comments)}
           </div>
         ))}
       </div>
@@ -88,8 +105,10 @@ const CommentSection = ({ post }) => {
     console.log(replyComment);
     dispatch(
       commentPost(post._id, {
-        firstName: user?.result?.firstName,
-        lastName: user?.result?.lastName,
+        firstName,
+        lastName,
+        userId,
+        isAdmin,
         comment: comment || replyComment,
         parentCommentId: parentCommentId || null,
       })
@@ -120,7 +139,7 @@ const CommentSection = ({ post }) => {
       </div>
       {/* Display comments and reply */}
 
-      {handleDisplay(post.comments)}
+      {displayComments(post.comments)}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { useSelector } from "react-redux";
 
 const StateContext = createContext();
 
@@ -7,6 +8,9 @@ export const ContextProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [screenSize, setScreenSize] = useState(null);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const { posts, isLoading } = useSelector((state) => state.allPosts);
+
+  const { singleUser, allUsers } = useSelector((state) => state.authReducer);
 
   return (
     <StateContext.Provider
@@ -19,6 +23,10 @@ export const ContextProvider = ({ children }) => {
         setSearch,
         snackBarOpen,
         setSnackBarOpen,
+        singleUser,
+        allUsers,
+        posts,
+        isLoading,
       }}
     >
       {children}
