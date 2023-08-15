@@ -42,9 +42,8 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
 };
 
 export const createPost = (post) => async (dispatch) => {
-  console.log(post);
   try {
-    const { data } = await api.createPost(post);
+    const { data } = await api.createPostApi(post);
 
     dispatch({ type: CREATE, payload: data });
   } catch (err) {
