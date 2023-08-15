@@ -24,14 +24,14 @@ const Display = ({ setCurrentId }) => {
 
   const following = () => {
     for (const user of allUsers) {
-      const matchingIds = user.followers.filter((id) => id === creator);
+      const matchingIds = user?.followers.filter((id) => id === creator);
       return matchingIds;
     }
   };
 
   const viewProfile = () => {
     navigate(
-      `/profile?firstName=${user.result.firstName}&lastName=${user.result.lastName}&creator=${user.result.creator}`
+      `/profile?firstName=${user?.result.firstName}&lastName=${user.result.lastName}&creator=${user.result.creator}`
     );
   };
 
@@ -52,7 +52,7 @@ const Display = ({ setCurrentId }) => {
       <div className="left-panel">
         <div>
           <div className="image-name-wrapper" onClick={viewProfile}>
-            <img src={user.result.profilePics} alt="" />
+            <img src={user?.result.profilePics} alt="" />
 
             <div className="username">{name}</div>
           </div>

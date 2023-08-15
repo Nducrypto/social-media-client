@@ -53,6 +53,9 @@
 .message-container{
   cursor:pointer;
 }
+.message-container p{
+ margin-top: 14px;;
+}
 
 .tweet-content img.uploaded-image {
   max-width: 100%;

@@ -34,9 +34,7 @@ const Form = ({ currentId }) => {
     if (currentId) setPostData(editPost);
   }, [editPost, currentId]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     if (currentId === 0) {
       dispatch(
         createPost({ ...postData, profilePics, firstName, lastName, creator })
