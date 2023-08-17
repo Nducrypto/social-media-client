@@ -8,43 +8,45 @@ import {
   COMMENT,
   END_LOADING,
   START_LOADING,
+  NOTIFICATION,
 } from "../constants/actionTypes";
 
-const allPosts = (
-  allPosts = {
+const timeline = (
+  timeline = {
     isLoading: false,
-    posts: [],
-
+    allPosts: [],
+    alert: [],
+    notification: [],
     searchposts: [],
   },
   action
 ) => {
   switch (action.type) {
     case START_LOADING:
-      return { ...allPosts, isLoading: true };
+      return { ...timeline, isLoading: true };
     case END_LOADING:
-      return { ...allPosts, isLoading: false };
+      return { ...timeline, isLoading: false };
     case FETCH_ALL:
       return {
-        ...allPosts,
-        posts: action.payload.data,
+        ...timeline,
+        allPosts: action.payload.data,
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
 
     case FETCH_BY_SEARCH:
-      return { ...allPosts, posts: action.payload };
+      return { ...timeline, allPosts: action.payload };
 
     case LIKE:
       return {
-        ...allPosts,
-        posts: allPosts.posts.map((post) =>
+        ...timeline,
+        allPosts: timeline.allPosts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
       };
 
     case COMMENT:
-      const updatedPosts = allPosts.posts.map((post) => {
+      const updatedPosts = timeline.allPosts.map((post) => {
         if (post._id === action.payload._id) {
           return {
             ...post,
@@ -56,27 +58,32 @@ const allPosts = (
       });
 
       return {
-        ...allPosts,
-        posts: updatedPosts,
+        ...timeline,
+        allPosts: updatedPosts,
       };
 
     case CREATE:
-      return { ...allPosts, posts: [...allPosts.posts, action.payload] };
+      return { ...timeline, allPosts: [...timeline.allPosts, action.payload] };
     case UPDATE:
       return {
-        ...allPosts,
-        posts: allPosts.posts.map((post) =>
+        ...timeline,
+        allPosts: timeline.allPosts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
       };
     case DELETE:
       return {
-        ...allPosts,
-        posts: allPosts.posts.filter((post) => post._id !== action.payload),
+        ...timeline,
+        allPosts: timeline.allPosts.filter(
+          (post) => post._id !== action.payload
+        ),
       };
+
+    case NOTIFICATION:
+      return { ...timeline, notification: action.payload };
     default:
-      return allPosts;
+      return timeline;
   }
 };
 
-export default allPosts;
+export default timeline;

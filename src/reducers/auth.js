@@ -21,7 +21,7 @@ const authReducer = (
     loading: false,
     change_pass_loading: false,
     allUsers: [],
-    singleUser: {},
+    profile: {},
     isUserError: false,
   },
   action
@@ -75,18 +75,18 @@ const authReducer = (
     case FOLLOW:
       return {
         ...authReducer,
-        singleUser: action.payload,
+        profile: action.payload,
       };
 
     case FETCH_USER_BY_ID:
-      return { ...authReducer, singleUser: action.payload };
+      return { ...authReducer, profile: action.payload };
 
     case UPDATE_USER:
       localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
 
       return {
         ...authReducer,
-        singleUser: action.data,
+        profile: action.data,
       };
 
     default:

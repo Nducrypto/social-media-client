@@ -8,11 +8,11 @@ import CommentSection from "./CommentSection";
 import "../Account/account.css";
 
 const PostDetails = () => {
-  const { posts, isLoading } = useSelector((state) => state.allPosts);
+  const { allPosts, isLoading } = useSelector((state) => state.timeline);
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const post = posts?.find((item) => id && item._id === id);
+  const post = allPosts?.find((item) => id && item._id === id);
 
   const handleOpenCreatedBy = () => {
     navigate(

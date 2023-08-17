@@ -11,14 +11,21 @@ import {
   MenuItem,
   Tooltip,
   useMediaQuery,
+  Badge,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { AccountCircle, Search, Settings } from "@mui/icons-material";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  AccountCircle,
+  Search,
+  Settings,
+  Notifications as NotifyIcon,
+} from "@mui/icons-material";
 import { getPostsBySearch } from "../../actions/posts";
 import { useStateContext } from "../../context/ContextProvider";
 import { LOGOUT } from "../../constants/actionTypes";
+// import useGenerateNotification from "../Notifications/useGenerateNotification";
+// import Notifications from "../Notifications/Notifications";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <Tooltip title={title} position="BottomCenter">
@@ -37,12 +44,19 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   </Tooltip>
 );
 const Navbar = () => {
-  const { search, setSearch, setActiveMenu, screenSize, setScreenSize } =
-    useStateContext();
-  const location = useLocation();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const {
+    search,
+    setSearch,
+    loggedInUser,
+    setActiveMenu,
+    screenSize,
+    setScreenSize,
+  } = useStateContext();
 
-  const user = JSON.parse(localStorage.getItem("profile"));
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { notification } = useSelector((state) => state.timeline);
+
+  // const { notificationCount } = useGenerateNotification(allPosts, loggedInUser);
 
   const dispatch = useDispatch();
 
@@ -71,9 +85,6 @@ const Navbar = () => {
 
     navigate("/");
   };
-  useEffect(() => {
-    JSON.parse(localStorage.getItem("profile"));
-  }, [location]);
 
   const handleResize = useCallback(() => {
     const newScreenSize = window.innerWidth;
@@ -109,7 +120,7 @@ const Navbar = () => {
 
   const viewProfile = () => {
     navigate(
-      `/profile?firstName=${user?.result?.firstName}&lastName=${user?.result?.lastName}&creator=${user?.result?._id}`
+      `/profile?firstName=${loggedInUser?.result?.firstName}&lastName=${loggedInUser?.result?.lastName}&creator=${loggedInUser?.result?._id}`
     );
   };
 
@@ -135,7 +146,12 @@ const Navbar = () => {
         >
           Mabench
         </Typography>
-        {user?.result ? (
+        {loggedInUser?.result && (
+          <Badge badgeContent={notification?.length} color="primary">
+            <NotifyIcon onClick={() => navigate("/notification")} />
+          </Badge>
+        )}
+        {loggedInUser?.result ? (
           <div>
             {isSmallScreen ? (
               <InputBase
@@ -178,7 +194,7 @@ const Navbar = () => {
             )}
           </div>
         ) : null}
-        {user?.result ? (
+        {loggedInUser?.result ? (
           <div>
             <IconButton color="inherit" onClick={handleToogleMenu}>
               <AccountCircle />
@@ -196,7 +212,6 @@ const Navbar = () => {
               >
                 <Typography variant="body2" sx={{ marginRight: 1 }}>
                   Profile
-                  {/* {user?.result.firstName} {user?.result.lastName} */}
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleToogleMenu}>

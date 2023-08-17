@@ -19,7 +19,7 @@ const CommentSection = ({ post }) => {
   const lastName = user?.result?.lastName;
   const userId = user?.result._id;
   const isAdmin = user?.result.isAdmin;
-  console.log(isAdmin);
+
   //  recursive function to display comments
   const displayComments = (comments) => {
     return (
@@ -29,9 +29,9 @@ const CommentSection = ({ post }) => {
             <div className="comment-header">
               <div className="comment-header-left">
                 <p className="author">
-                  {comment.userName}
+                  {comment?.userName}
                   {""}
-                  {comment.isAdmin && (
+                  {comment?.isAdmin && (
                     <VerifiedUserIcon
                       sx={{ fontSize: "1rem", color: "blue" }}
                     />

@@ -17,35 +17,35 @@ import { getPosts } from "./actions/posts";
 import { useDispatch } from "react-redux";
 import { useStateContext } from "./context/ContextProvider";
 import { getUsers } from "./actions/auth";
+import Notifications from "./components/Notifications/Notifications";
 
 const App = () => {
-  const user = JSON.parse(localStorage.getItem("profile"));
-  const { activeMenu, data, setActiveMenu } = useStateContext();
+  const { activeMenu, setActiveMenu, loggedInUser } = useStateContext();
   const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    JSON.parse(localStorage.getItem("profile"));
+    // JSON.parse(localStorage.getItem("profile"));
     dispatch(getUsers());
     dispatch(getPosts());
-  }, [location, dispatch, data]);
+  }, [location, dispatch]);
 
   const AuthProtected = ({ children }) => {
-    if (!user?.result) {
-      return children;
-    } else {
+    if (loggedInUser?.result) {
       return <Navigate to="/" />;
+    } else {
+      return children;
     }
   };
   const UserProtected = ({ children }) => {
-    if (user?.result) {
+    if (loggedInUser?.result) {
       return children;
     } else {
       return <Navigate to="/" />;
     }
   };
   const AdminProtected = ({ children }) => {
-    if (user?.result.isAdmin) {
+    if (loggedInUser?.result.isAdmin) {
       return children;
     } else {
       return <Navigate to="/" />;
@@ -53,7 +53,7 @@ const App = () => {
   };
   return (
     <div className="flex relative">
-      {!user?.result && setActiveMenu(false)}
+      {!loggedInUser?.result && setActiveMenu(false)}
       <>
         {activeMenu ? (
           <div className="w-72 fixed sidebar">
@@ -123,6 +123,14 @@ const App = () => {
               element={
                 <UserProtected>
                   <Profile />
+                </UserProtected>
+              }
+            />
+            <Route
+              path="/notification"
+              element={
+                <UserProtected>
+                  <Notifications />
                 </UserProtected>
               }
             />

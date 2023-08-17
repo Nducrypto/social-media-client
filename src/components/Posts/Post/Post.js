@@ -15,16 +15,17 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import "./post.css";
 import { Tooltip } from "@mui/material";
 import { follow } from "../../../actions/auth";
+import { useStateContext } from "../../../context/ContextProvider";
 
 const Post = ({ post, setCurrentId }) => {
-  const user = JSON.parse(localStorage.getItem("profile"));
+  const { loggedInUser } = useStateContext();
   const [likes, setLikes] = useState(post?.likes);
   const [active, setActive] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userId = user?.result?._id;
-  const isAdmin = user?.result?.isAdmin;
+  const userId = loggedInUser?.result?._id;
+  const isAdmin = loggedInUser?.result?.isAdmin;
 
   const handleLike = async () => {
     const hasLikedPost = likes.indexOf(userId);
@@ -37,9 +38,9 @@ const Post = ({ post, setCurrentId }) => {
     dispatch(likePost(post._id, { userId }));
   };
 
-  // function handleFollow(creator) {
-  //   dispatch(follow(creator, { followerId: user?.result?._id }));
-  // }
+  function handleFollow(creator) {
+    dispatch(follow(creator, { followerId: loggedInUser?.result?._id }));
+  }
 
   const Likes = () => {
     if (likes.length > 0) {
@@ -88,7 +89,7 @@ const Post = ({ post, setCurrentId }) => {
               <div>
                 <strong>
                   {`${post.firstName} ${post.lastName} `}{" "}
-                  {isAdmin && (
+                  {post.isAdmin && (
                     <VerifiedUserIcon
                       sx={{ fontSize: "1rem", color: "blue" }}
                     />
@@ -108,17 +109,12 @@ const Post = ({ post, setCurrentId }) => {
 
                 {active === post._id && (
                   <div className="popup-info">
-                    {post?.creator !== user?.result._id && (
+                    {post?.creator !== loggedInUser?.result._id && (
                       <button>
                         <Tooltip title="follow" placement="right-start">
                           <PersonAddIcon
                             onClick={() => {
-                              dispatch(
-                                follow(post.creator, {
-                                  followerId: user?.result?._id,
-                                })
-                              );
-
+                              handleFollow(post?.creator);
                               setActive("");
                             }}
                           />
@@ -126,7 +122,7 @@ const Post = ({ post, setCurrentId }) => {
                       </button>
                     )}
 
-                    {user?.result?._id === post?.creator || isAdmin ? (
+                    {loggedInUser?.result?._id === post?.creator || isAdmin ? (
                       <button>
                         <Tooltip title="edit" placement="right-start">
                           <EditIcon
@@ -151,16 +147,16 @@ const Post = ({ post, setCurrentId }) => {
             </div>
           </div>
           <article className="tweet-actions">
-            {user?.result && (
+            {loggedInUser?.result && (
               <span>
-                <button onClick={handleLike} disabled={!user?.result}>
+                <button onClick={handleLike} disabled={!loggedInUser?.result}>
                   <Likes />
                 </button>
               </span>
             )}
             <span onClick={openPost}>{post?.comments?.length} Comments</span>
             <span>
-              {user?.result?._id === post?.creator || isAdmin ? (
+              {loggedInUser?.result?._id === post?.creator || isAdmin ? (
                 <DeleteIcon
                   style={{ cursor: "pointer", color: "red" }}
                   fontSize="small"

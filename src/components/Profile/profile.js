@@ -1,36 +1,45 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Grid } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Post from "../Posts/Post/Post";
 import { Box } from "@mui/system";
 import { getUser, follow } from "../../actions/auth";
 import "./profile.css";
-import { following } from "../../Utils/Following";
+import { Following } from "../../Utils/Following";
 import { useStateContext } from "../../context/ContextProvider";
 
 const Profile = () => {
-  const { singleUser, allUsers, posts, isLoading } = useStateContext();
+  const { loggedInUser } = useStateContext();
   const dispatch = useDispatch();
-  const user = JSON.parse(localStorage.getItem("profile"));
   const navigate = useNavigate();
+  const { profile, allUsers } = useSelector((state) => state.authReducer);
+  const { allPosts, isLoading } = useSelector((state) => state.timeline);
+
+  const { profilePics, followers, firstName, email, lastName } = profile;
 
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
+  const {
+    result: { _id: loggedInUserId },
+  } = loggedInUser;
 
   const creator = useQuery().get("creator");
 
-  const profileposts = posts?.filter((item) => item.creator.includes(creator));
+  const profileposts = allPosts?.filter((item) =>
+    item.creator.includes(creator)
+  );
+  function handleFollow() {
+    dispatch(follow(creator, { followerId: loggedInUserId }));
+  }
 
   useEffect(() => {
-    dispatch(getUser(creator));
+    if (creator) {
+      dispatch(getUser(creator));
+    }
   }, [creator, dispatch]);
-
-  function handleFollow() {
-    dispatch(follow(creator, { followerId: user?.result?._id }));
-  }
 
   return (
     <div>
@@ -58,26 +67,28 @@ const Profile = () => {
                 height: 90,
                 background: "grey",
               }}
-              src={singleUser?.profilePics}
-              alt={singleUser?.firstName?.charAt(0)}
+              src={profilePics}
+              alt={firstName?.charAt(0)}
             />
           </div>
           email
-          <p style={{ fontSize: "0.9rem" }}>{singleUser?.email} </p>
+          <p style={{ fontSize: "0.9rem" }}>{email} </p>
           <p>
-            {singleUser?.firstName} {singleUser?.lastName}{" "}
+            {firstName} {lastName}{" "}
           </p>
           <div>
             {" "}
-            {singleUser?.followers?.length}{" "}
-            {singleUser?.followers?.length > 1 ? "followers" : "follower"}
+            {followers?.length}{" "}
+            {followers?.length > 1 ? "followers" : "follower"}
           </div>
-          <div> {following(allUsers, creator).length} following </div>
+          <div>
+            <Following allUsers={allUsers} creator={creator} /> following{" "}
+          </div>
         </div>
 
         <div>
           {" "}
-          {creator !== user?.result._id ? (
+          {creator !== loggedInUserId ? (
             <Button
               onClick={handleFollow}
               variant="contained"
@@ -86,9 +97,7 @@ const Profile = () => {
                 borderRadius: "1rem",
               }}
             >
-              {singleUser?.followers?.includes(user?.result._id)
-                ? "Unfollow"
-                : "Follow"}
+              {followers?.includes(loggedInUserId) ? "Unfollow" : "Follow"}
             </Button>
           ) : (
             <Button

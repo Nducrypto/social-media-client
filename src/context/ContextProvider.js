@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const StateContext = createContext();
 
@@ -8,9 +8,14 @@ export const ContextProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [screenSize, setScreenSize] = useState(null);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const { posts, isLoading } = useSelector((state) => state.allPosts);
 
-  const { singleUser, allUsers } = useSelector((state) => state.authReducer);
+  const loggedInUser = JSON.parse(localStorage.getItem("profile"));
+
+  const location = useLocation();
+
+  useEffect(() => {
+    JSON.parse(localStorage.getItem("profile"));
+  }, [location]);
 
   return (
     <StateContext.Provider
@@ -23,10 +28,8 @@ export const ContextProvider = ({ children }) => {
         setSearch,
         snackBarOpen,
         setSnackBarOpen,
-        singleUser,
-        allUsers,
-        posts,
-        isLoading,
+
+        loggedInUser,
       }}
     >
       {children}

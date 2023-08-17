@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 
-import allPosts from "./posts";
+import timeline from "./posts";
 import authReducer from "./auth";
 
-export default combineReducers({ allPosts, authReducer });
+export default combineReducers({ timeline, authReducer });

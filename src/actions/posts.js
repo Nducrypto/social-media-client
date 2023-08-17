@@ -8,8 +8,10 @@ import {
   DELETE,
   LIKE,
   COMMENT,
+  NOTIFICATION,
 } from "../constants/actionTypes";
 import * as api from "../api/index.js";
+import { extractOtherUserComments } from "./getNotifications";
 
 export const getPosts = (page) => async (dispatch) => {
   try {
@@ -22,6 +24,9 @@ export const getPosts = (page) => async (dispatch) => {
       type: FETCH_ALL,
       payload: { data, currentPage, numberOfPages },
     });
+    const filteredComments = extractOtherUserComments(data);
+    dispatch({ type: NOTIFICATION, payload: filteredComments });
+
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);

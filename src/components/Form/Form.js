@@ -6,6 +6,7 @@ import { createPost, updatePost } from "../../actions/posts";
 
 import { useNavigate } from "react-router-dom";
 import "./form.css";
+
 const Form = ({ currentId }) => {
   const [postData, setPostData] = useState({
     message: "",
@@ -17,16 +18,16 @@ const Form = ({ currentId }) => {
   const profilePics = user?.result?.profilePics;
   const lastName = user?.result?.lastName;
   const firstName = user?.result?.firstName;
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const creator = user?.result?._id;
 
-  const { posts } = useSelector((state) => state.allPosts);
+  const { allPosts } = useSelector((state) => state.timeline);
 
-  //=== this is for updating of post
-  const editPost = posts.find((p) => currentId && p._id === currentId);
+  const editPost = allPosts.find((p) => currentId && p._id === currentId);
 
   const theme = createTheme();
 
@@ -37,7 +38,10 @@ const Form = ({ currentId }) => {
   const handleSubmit = () => {
     if (currentId === 0) {
       dispatch(
-        createPost({ ...postData, profilePics, firstName, lastName, creator })
+        createPost({
+          ...postData,
+          creator,
+        })
       );
     } else {
       dispatch(

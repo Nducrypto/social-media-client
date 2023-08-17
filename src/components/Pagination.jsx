@@ -7,7 +7,7 @@ import { Pagination, PaginationItem } from "@mui/material";
 import { getPosts } from "../actions/posts";
 
 const Paginate = ({ page }) => {
-  const { numberOfPages } = useSelector((state) => state.allPosts);
+  const { numberOfPages } = useSelector((state) => state.timeline);
   const dispatch = useDispatch();
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { getUser, updateUser, changePassword } from "../../actions/auth";
 
 import FileBase from "react-file-base64";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useStateContext } from "../../context/ContextProvider";
 import CustomizedSnackbar from "../SnackBar/SnackBar";
 import "./account.css";
@@ -26,7 +26,6 @@ const Account = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const userId = user?.result?._id;
-  console.log(userId);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -34,11 +33,12 @@ const Account = () => {
   const { loading, isUserError, change_pass_loading } = useSelector(
     (state) => state.authReducer
   );
-
+  const location = useLocation();
   useEffect(() => {
-    JSON.parse(localStorage.getItem("profile"));
-    dispatch(getUser(userId));
-  }, [dispatch, userId]);
+    if (userId && location.pathname === "/account") {
+      dispatch(getUser(userId));
+    }
+  }, [dispatch, userId, location.pathname]);
 
   // === HANDLEUPDATEUSER
   const handleSubmit = () => {

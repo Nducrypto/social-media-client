@@ -1,4 +1,4 @@
-export function following(allUsers, creator) {
+export function Following({ allUsers, creator }) {
   const matchingIds = [];
   allUsers.forEach((user) => {
     if (user?.followers.includes(creator)) {
@@ -6,9 +6,9 @@ export function following(allUsers, creator) {
     }
   });
 
-  return matchingIds;
+  return matchingIds.length;
 }
-// export const following = (allUsers, creator) => {
+// export const Following = ({allUsers, creator}) => {
 //   const matchingIds = [];
 //   for (const user of allUsers) {
 //     if (user?.followers.includes(creator)) {

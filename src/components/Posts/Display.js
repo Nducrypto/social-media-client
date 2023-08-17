@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./display.css";
 import Post from "./Post/Post";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUser } from "../../actions/auth";
-import { following } from "../../Utils/Following";
+import { Following } from "../../Utils/Following";
 
 const Display = ({ setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem("profile"));
 
-  const name = `${user?.result.firstName} ${user?.result.lastName}`;
-  const { posts, isLoading } = useSelector((state) => state?.allPosts);
-  const { singleUser, allUsers } = useSelector((state) => state.authReducer);
+  const { profile, allUsers } = useSelector((state) => state.authReducer);
+  const { allPosts, isLoading } = useSelector((state) => state.timeline);
+
   const trendingTopics = [
     "#TravelAdventures",
     "#FoodieFinds",
@@ -21,19 +21,20 @@ const Display = ({ setCurrentId }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const name = `${user?.result.firstName} ${user?.result.lastName}`;
+
   const creator = user?.result._id;
 
   const viewProfile = () => {
-    navigate(
-      `/profile?firstName=${user?.result.firstName}&lastName=${user.result.lastName}&creator=${user.result.creator}`
-    );
+    navigate(`/profile?name=${name}&creator=${user?.result?._id}`);
   };
+  const location = useLocation();
 
   useEffect(() => {
     if (creator) {
       dispatch(getUser(creator));
     }
-  }, [creator, dispatch]);
+  }, [creator, dispatch, location.pathname]);
 
   return isLoading ? (
     <div style={{ textAlign: "center", marginTop: "8rem" }}>
@@ -44,27 +45,31 @@ const Display = ({ setCurrentId }) => {
   ) : (
     <div className="Post-container">
       <div className="left-panel">
-        <div>
-          <div className="image-name-wrapper" onClick={viewProfile}>
-            <img src={user?.result.profilePics} alt="" />
+        {user?.result && (
+          <div>
+            <div className="image-name-wrapper" onClick={viewProfile}>
+              <img src={user?.result.profilePics} alt="" />
 
-            <div className="username">{name}</div>
-          </div>
+              <div className="username">{name}</div>
+            </div>
 
-          <div className="followers">
-            {singleUser?.followers?.length}{" "}
-            {singleUser?.followers?.length > 1 ? "followers" : "follower"}
+            <div className="followers">
+              {profile?.followers?.length}{" "}
+              {profile?.followers?.length > 1 ? "followers" : "follower"}
+            </div>
+            <div className="following">
+              <span>
+                <Following allUsers={allUsers} creator={creator} /> following{" "}
+              </span>{" "}
+            </div>
           </div>
-          <div className="following">
-            <span>{following(allUsers, creator)?.length}</span> Following
-          </div>
-        </div>
+        )}
       </div>
       <div className="middle-panel">
-        {!posts?.length && !isLoading ? (
+        {!allPosts?.length && !isLoading ? (
           <h1>No Post</h1>
         ) : (
-          posts
+          allPosts
             ?.sort((a, b) => (a._id > b._id ? -1 : +1))
             .map((post) => (
               <div key={post._id}>
