@@ -42,7 +42,7 @@ export const useSocketIo = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [dispatch, socket]);
 };
 
 export const getPosts = (page) => async (dispatch) => {
