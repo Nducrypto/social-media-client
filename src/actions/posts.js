@@ -25,9 +25,11 @@ export const useSocketIo = () => {
   useEffect(() => {
     socket.on("connect", () => {
       console.log(socket.connected);
+
       socket.on("new-posts", (newPosts) => {
         dispatch({ type: CREATE, payload: newPosts });
       });
+
       socket.on("delete-posts", (id) => {
         dispatch({ type: DELETE, payload: id });
       });
