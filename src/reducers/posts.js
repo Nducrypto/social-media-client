@@ -11,6 +11,12 @@ import {
   START_LOADING,
   NOTIFICATION,
 } from "../constants/actionTypes";
+import { binarySearch, mergeSortArray } from "../Utils/utils";
+
+// compare function for searching,
+function comparePosts(postA, postB) {
+  return postB._id.localeCompare(postA._id);
+}
 
 const timeline = (
   timeline = {
@@ -27,51 +33,92 @@ const timeline = (
       return { ...timeline, isLoading: true };
     case END_LOADING:
       return { ...timeline, isLoading: false };
+
     case FETCH_ALL:
+      const sortedArray = mergeSortArray(action.payload.data, (a, b) =>
+        b._id.localeCompare(a._id)
+      );
       return {
         ...timeline,
-        allPosts: action.payload.data,
+        allPosts: sortedArray,
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
 
+    case CREATE:
+      const create = {
+        ...timeline,
+        allPosts: [...timeline.allPosts, action.payload],
+      };
+
+      const sort = mergeSortArray(create.allPosts, (a, b) =>
+        b._id.localeCompare(a._id)
+      );
+
+      return { ...timeline, allPosts: sort };
+
     case FETCH_BY_SEARCH:
-      return { ...timeline, allPosts: action.payload };
+      const sortarray = mergeSortArray(action.payload, (a, b) =>
+        b._id.localeCompare(a._id)
+      );
+      return { ...timeline, allPosts: sortarray };
 
     case LIKE:
+      const { allPosts } = timeline;
+      const likedPost = action.payload;
+      // Find the index of the liked post using binary search
+      const indexOfLikedPost = binarySearch(allPosts, likedPost, comparePosts);
+      const updateLikedPost = [...allPosts];
+
+      if (indexOfLikedPost !== -1) {
+        updateLikedPost[indexOfLikedPost] = likedPost;
+      }
+
       return {
         ...timeline,
-        allPosts: timeline.allPosts.map((post) =>
-          post._id === action.payload._id ? action.payload : post
-        ),
+        allPosts: updateLikedPost,
       };
 
     case COMMENT:
-      const updatedPosts = timeline.allPosts.map((post) => {
-        if (post._id === action.payload._id) {
-          return {
-            ...post,
-            // Update the comment field or any other fields you want to modify
-            comments: action.payload.comments,
-          };
-        }
-        return post; // Return unchanged post for other posts
-      });
+      const commentedPost = action.payload;
+      const indexOfCommentedPost = binarySearch(
+        timeline.allPosts,
+        commentedPost,
+        comparePosts
+      );
+      console.log(indexOfCommentedPost);
+      const updateCommentedPost = [...timeline.allPosts];
+      if (indexOfCommentedPost !== -1) {
+        // Update the comment field
+        updateCommentedPost[indexOfCommentedPost] = {
+          ...updateCommentedPost[indexOfCommentedPost],
+          comments: commentedPost.comments,
+        };
+      }
 
       return {
         ...timeline,
-        allPosts: updatedPosts,
+        allPosts: updateCommentedPost,
       };
 
-    case CREATE:
-      return { ...timeline, allPosts: [...timeline.allPosts, action.payload] };
     case UPDATE:
+      const updatedPost = action.payload;
+      const indexOfPost = binarySearch(
+        timeline.allPosts,
+        updatedPost,
+        comparePosts
+      );
+
+      const updatePost = [...timeline.allPosts];
+      if (indexOfPost !== -1) {
+        updatePost[indexOfPost] = updatedPost;
+      }
+
       return {
         ...timeline,
-        allPosts: timeline.allPosts.map((post) =>
-          post._id === action.payload._id ? action.payload : post
-        ),
+        allPosts: updatePost,
       };
+
     case DELETE:
       return {
         ...timeline,

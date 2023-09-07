@@ -10,17 +10,17 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
 import { likePost, deletePost } from "../../../actions/posts";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+
 import "./post.css";
 import { Tooltip } from "@mui/material";
 import { follow } from "../../../actions/auth";
 import { useStateContext } from "../../../context/ContextProvider";
+import LikeButton from "./LikeButton";
 
 const Post = ({ post, setCurrentId }) => {
   const { loggedInUser } = useStateContext();
-  const [likes, setLikes] = useState(post?.likes);
   const [active, setActive] = useState("");
+  const likes = post?.likes;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,46 +28,12 @@ const Post = ({ post, setCurrentId }) => {
   const isAdmin = loggedInUser?.result?.isAdmin;
 
   const handleLike = async () => {
-    const hasLikedPost = likes.indexOf(userId);
-    if (hasLikedPost === -1) {
-      likes.push(userId);
-    } else {
-      likes.splice(hasLikedPost, 1);
-    }
-    setLikes([...likes]);
     dispatch(likePost(post._id, { userId }));
   };
 
   function handleFollow(creator) {
     dispatch(follow(creator, { followerId: loggedInUser?.result?._id }));
   }
-
-  const Likes = () => {
-    if (likes.length > 0) {
-      return likes.includes(userId) ? (
-        <>
-          <FavoriteIcon fontSize="medium" />
-          &nbsp;
-          {likes.length >= 2 ? (
-            <span style={{ fontSize: "0.8rem" }}>
-              {` You and ${likes.length - 1} Other${
-                likes.length <= 2 ? "" : "s"
-              }`}
-            </span>
-          ) : (
-            `${likes.length} like${likes.length > 1 ? "s" : ""}`
-          )}
-        </>
-      ) : (
-        <>
-          <FavoriteBorderIcon fontSize="small" />
-          &nbsp;{likes.length} {likes.length === 1 ? "" : ""}
-        </>
-      );
-    }
-
-    return <FavoriteBorderIcon fontSize="small" />;
-  };
 
   const viewProfile = () => {
     navigate(
@@ -150,7 +116,7 @@ const Post = ({ post, setCurrentId }) => {
             {loggedInUser?.result && (
               <span>
                 <button onClick={handleLike} disabled={!loggedInUser?.result}>
-                  <Likes />
+                  <LikeButton likes={likes} />
                 </button>
               </span>
             )}

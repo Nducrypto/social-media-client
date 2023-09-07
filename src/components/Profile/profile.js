@@ -7,7 +7,7 @@ import Post from "../Posts/Post/Post";
 import { Box } from "@mui/system";
 import { getUser, follow } from "../../actions/auth";
 import "./profile.css";
-import { Following } from "../../Utils/Following";
+import { Following } from "../../Utils/utils";
 import { useStateContext } from "../../context/ContextProvider";
 
 const Profile = () => {

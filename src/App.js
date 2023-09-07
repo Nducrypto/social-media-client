@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { useStateContext } from "./context/ContextProvider";
 import { getUsers } from "./actions/auth";
 import Notifications from "./components/Notifications/Notifications";
+import { AdminProtected, AuthProtected, UserProtected } from "./Utils/utils";
 
 const App = () => {
   const { activeMenu, setActiveMenu, loggedInUser } = useStateContext();
@@ -31,27 +32,6 @@ const App = () => {
     dispatch(getPosts());
   }, [dispatch]);
 
-  const AuthProtected = ({ children }) => {
-    if (loggedInUser?.result) {
-      return <Navigate to="/" />;
-    } else {
-      return children;
-    }
-  };
-  const UserProtected = ({ children }) => {
-    if (loggedInUser?.result) {
-      return children;
-    } else {
-      return <Navigate to="/" />;
-    }
-  };
-  const AdminProtected = ({ children }) => {
-    if (loggedInUser?.result.isAdmin) {
-      return children;
-    } else {
-      return <Navigate to="/" />;
-    }
-  };
   return (
     <div className="flex relative">
       {!loggedInUser?.result && setActiveMenu(false)}

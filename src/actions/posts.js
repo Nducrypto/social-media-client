@@ -15,36 +15,44 @@ import { extractOtherUserComments } from "./getNotifications";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
+import { useStateContext } from "../context/ContextProvider";
 
 export const useSocketIo = () => {
-  const socket = io(process.env.REACT_APP_SOCKET_URL, {
-    withCredentials: true,
-  });
+  const { loggedInUser } = useStateContext();
 
   const dispatch = useDispatch();
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log(socket.connected);
+    if (loggedInUser?.result?._id) {
+      const socket = io(process.env.REACT_APP_SOCKET_URL, {
+        withCredentials: true,
+        autoConnect: true,
+      });
+      socket.on("connect", () => {
+        console.log(`socket io conected = ${socket.connected}`);
 
-      socket.on("new-posts", (newPosts) => {
-        dispatch({ type: CREATE, payload: newPosts });
+        socket.on("new-posts", (newPosts) => {
+          dispatch({ type: CREATE, payload: newPosts });
+        });
+
+        socket.on("delete-posts", (id) => {
+          dispatch({ type: DELETE, payload: id });
+        });
+        socket.on("like-post", (data) => {
+          dispatch({ type: LIKE, payload: data });
+        });
+        socket.on("new-comment", (updatePostAfterComment) => {
+          dispatch({ type: COMMENT, payload: updatePostAfterComment });
+        });
+        socket.on("remove-comment", (data) => {
+          dispatch({ type: COMMENT, payload: data });
+        });
       });
 
-      socket.on("delete-posts", (id) => {
-        dispatch({ type: DELETE, payload: id });
-      });
-      socket.on("new-comment", (updatePostAfterComment) => {
-        dispatch({ type: COMMENT, payload: updatePostAfterComment });
-      });
-      socket.on("remove-comment", (data) => {
-        dispatch({ type: COMMENT, payload: data });
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [dispatch, socket]);
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [dispatch, loggedInUser?.result?._id]);
 };
 
 export const getPosts = (page) => async (dispatch) => {
@@ -106,9 +114,10 @@ export const updatePost = (id, post) => async (dispatch) => {
 
 export const likePost = (id, userId) => async (dispatch) => {
   try {
-    const { data } = await api.likePost(id, userId);
+    // const { data } =
+    await api.likePost(id, userId);
 
-    dispatch({ type: LIKE, payload: data });
+    // dispatch({ type: LIKE, payload: data });
   } catch (error) {
     console.log(error);
   }

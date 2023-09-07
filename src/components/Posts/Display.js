@@ -4,7 +4,7 @@ import "./display.css";
 import Post from "./Post/Post";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUser } from "../../actions/auth";
-import { Following } from "../../Utils/Following";
+import { Following } from "../../Utils/utils";
 import { postIsLoading, selectAllPosts } from "../../reducers/posts";
 import { useSocketIo } from "../../actions/posts";
 
@@ -76,13 +76,11 @@ const Display = ({ setCurrentId }) => {
         {!allPosts?.length && !isLoading ? (
           <h1>No Post</h1>
         ) : (
-          allPosts
-            ?.sort((a, b) => (a._id > b._id ? -1 : +1))
-            .map((post) => (
-              <div key={post._id}>
-                <Post post={post} setCurrentId={setCurrentId} />
-              </div>
-            ))
+          allPosts.map((post) => (
+            <div key={post._id}>
+              <Post post={post} setCurrentId={setCurrentId} />
+            </div>
+          ))
         )}
       </div>
 
