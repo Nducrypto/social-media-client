@@ -1,3 +1,4 @@
+import { createSelector } from "reselect";
 import {
   FETCH_ALL,
   FETCH_BY_SEARCH,
@@ -85,5 +86,16 @@ const timeline = (
       return timeline;
   }
 };
+const selectTimeline = (state) => state.timeline;
+
+export const selectAllPosts = createSelector(
+  [selectTimeline],
+  (timeline) => timeline.allPosts
+);
+
+export const postIsLoading = createSelector(
+  [selectTimeline],
+  (timeline) => timeline.isLoading
+);
 
 export default timeline;

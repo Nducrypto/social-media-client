@@ -12,6 +12,38 @@ import {
 } from "../constants/actionTypes";
 import * as api from "../api/index.js";
 import { extractOtherUserComments } from "./getNotifications";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { io } from "socket.io-client";
+
+export const useSocketIo = () => {
+  const socket = io(process.env.REACT_APP_SOCKET_URL, {
+    withCredentials: true,
+  });
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log(socket.connected);
+      socket.on("new-posts", (newPosts) => {
+        dispatch({ type: CREATE, payload: newPosts });
+      });
+      socket.on("delete-posts", (id) => {
+        dispatch({ type: DELETE, payload: id });
+      });
+      socket.on("new-comment", (updatePostAfterComment) => {
+        dispatch({ type: COMMENT, payload: updatePostAfterComment });
+      });
+      socket.on("remove-comment", (data) => {
+        dispatch({ type: COMMENT, payload: data });
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+};
 
 export const getPosts = (page) => async (dispatch) => {
   try {
@@ -48,9 +80,7 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
 
 export const createPost = (post) => async (dispatch) => {
   try {
-    const { data } = await api.createPostApi(post);
-
-    dispatch({ type: CREATE, payload: data });
+    await api.createPostApi(post);
   } catch (err) {
     console.log(err.response.data.message);
   }
@@ -58,8 +88,6 @@ export const createPost = (post) => async (dispatch) => {
 export const deletePost = (id) => async (dispatch) => {
   try {
     await api.deletePost(id);
-
-    dispatch({ type: DELETE, payload: id });
   } catch (error) {
     console.log(error);
   }
@@ -86,21 +114,14 @@ export const likePost = (id, userId) => async (dispatch) => {
 
 export const commentPost = (id, value) => async (dispatch) => {
   try {
-    const { data } = await api.comment(id, value);
-
-    dispatch({ type: COMMENT, payload: data });
-
-    // return data.comments;
+    await api.comment(id, value);
   } catch (error) {
     console.log(error);
   }
 };
 export const deleteComment = (id, value) => async (dispatch) => {
-  console.log(value);
   try {
-    const { data } = await api.deletecomment(id, value);
-    dispatch({ type: COMMENT, payload: data });
-    // return data.comments;
+    await api.deletecomment(id, value);
   } catch (error) {
     console.log(error);
   }

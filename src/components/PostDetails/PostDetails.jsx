@@ -6,9 +6,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import CommentSection from "./CommentSection";
 
 import "../Account/account.css";
+import { useSocketIo } from "../../actions/posts";
 
 const PostDetails = () => {
-  const { allPosts, isLoading } = useSelector((state) => state.timeline);
+  useSocketIo();
+  const { allPosts } = useSelector((state) => state.timeline);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -20,19 +22,6 @@ const PostDetails = () => {
     );
   };
   if (!post) return null;
-
-  if (isLoading) {
-    return (
-      <div className="account-loader-container">
-        <div
-          style={{
-            marginTop: "15rem",
-          }}
-          className="account-custom-loader"
-        ></div>
-      </div>
-    );
-  }
 
   // const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 

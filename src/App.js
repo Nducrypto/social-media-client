@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import {
   Navbar,
@@ -21,14 +21,15 @@ import Notifications from "./components/Notifications/Notifications";
 
 const App = () => {
   const { activeMenu, setActiveMenu, loggedInUser } = useStateContext();
-  const location = useLocation();
+
   const dispatch = useDispatch();
 
+  // console.log(io);
   useEffect(() => {
-    // JSON.parse(localStorage.getItem("profile"));
     dispatch(getUsers());
+
     dispatch(getPosts());
-  }, [location, dispatch]);
+  }, [dispatch]);
 
   const AuthProtected = ({ children }) => {
     if (loggedInUser?.result) {

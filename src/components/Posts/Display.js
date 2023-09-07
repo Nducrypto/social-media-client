@@ -5,12 +5,15 @@ import Post from "./Post/Post";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUser } from "../../actions/auth";
 import { Following } from "../../Utils/Following";
+import { postIsLoading, selectAllPosts } from "../../reducers/posts";
+import { useSocketIo } from "../../actions/posts";
 
 const Display = ({ setCurrentId }) => {
+  useSocketIo();
   const user = JSON.parse(localStorage.getItem("profile"));
-
   const { profile, allUsers } = useSelector((state) => state.authReducer);
-  const { allPosts, isLoading } = useSelector((state) => state.timeline);
+  const allPosts = useSelector(selectAllPosts);
+  const isLoading = useSelector(postIsLoading);
 
   const trendingTopics = [
     "#TravelAdventures",
@@ -36,13 +39,17 @@ const Display = ({ setCurrentId }) => {
     }
   }, [creator, dispatch, location.pathname]);
 
-  return isLoading ? (
-    <div style={{ textAlign: "center", marginTop: "8rem" }}>
-      <div className="post-loader-container">
-        <div className="post-custom-loader"></div>
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "8rem" }}>
+        <div className="post-loader-container">
+          <div className="post-custom-loader"></div>
+        </div>
       </div>
-    </div>
-  ) : (
+    );
+  }
+
+  return (
     <div className="Post-container">
       <div className="left-panel">
         {user?.result && (
