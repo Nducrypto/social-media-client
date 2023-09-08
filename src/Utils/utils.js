@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 
 export function Following({ allUsers, creator }) {
@@ -68,7 +69,6 @@ export const binarySearch = (arr, target, compareFn) => {
 
 export const AuthProtected = ({ children }) => {
   const { loggedInUser } = useStateContext();
-
   if (loggedInUser?.result) {
     return <Navigate to="/" />;
   } else {

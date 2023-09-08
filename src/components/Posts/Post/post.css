@@ -1,7 +1,4 @@
 
-
-
-
 .tweets {
   display: flex;
   flex-direction: column;
@@ -126,7 +123,9 @@
 @media (max-width: 768px) {
  
   .tweets {
-    width: 100%;
+    width: 110%;
+    margin-left:  -0.8rem;
+
   }
   
   .tweet-content img.uploaded-image {
@@ -137,6 +136,7 @@
 
   .tweet {
     padding: 10px;
+    margin: 0;
   }
 
   .tweet-content strong {
