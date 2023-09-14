@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Navbar,
@@ -21,16 +21,18 @@ import Notifications from "./components/Notifications/Notifications";
 import { AdminProtected, AuthProtected, UserProtected } from "./Utils/utils";
 
 const App = () => {
+  const location = useLocation();
+  const page = new URLSearchParams(location.search).get("page") || 1;
   const { activeMenu, setActiveMenu, loggedInUser } = useStateContext();
 
   const dispatch = useDispatch();
 
-  // console.log(io);
   useEffect(() => {
+    if (page) {
+      dispatch(getPosts(page));
+    }
     dispatch(getUsers());
-
-    dispatch(getPosts());
-  }, [dispatch]);
+  }, [dispatch, page]);
 
   return (
     <div className="flex relative">

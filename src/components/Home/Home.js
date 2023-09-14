@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Container, Grow, Paper, createTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
-
 import Display from "../Posts/Display";
 import Form from "../Form/Form";
 import Pagination from "../Pagination";
-// import { useSelector } from "react-redux";
+import { postIsLoading } from "../../reducers/posts";
+import { useSelector } from "react-redux";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -16,8 +16,7 @@ const Home = () => {
   const searchQuery = query.get("searchQuery");
   const theme = createTheme();
   const [currentId, setCurrentId] = useState(0);
-
-  // const { isLoading } = useSelector((state) => state.allPosts);
+  const isLoading = useSelector(postIsLoading);
 
   return (
     <Grow in>
@@ -39,18 +38,19 @@ const Home = () => {
           </div>
 
           <div>
-            {!searchQuery && (
-              <Paper
-                sx={{
-                  backgroundColor: "white",
-                  // [theme.breakpoints.up("sm")]: {
-                  //   display: "none",
-                  // },
-                }}
-                elevation={6}
-              >
-                <Pagination page={page} />
-              </Paper>
+            {isLoading ? null : (
+              <>
+                {!searchQuery && (
+                  <Paper
+                    sx={{
+                      backgroundColor: "white",
+                    }}
+                    elevation={6}
+                  >
+                    <Pagination page={page} />
+                  </Paper>
+                )}
+              </>
             )}
           </div>
         </div>

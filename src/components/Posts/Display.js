@@ -7,10 +7,11 @@ import { getUser } from "../../actions/auth";
 import { Following } from "../../Utils/utils";
 import { postIsLoading, selectAllPosts } from "../../reducers/posts";
 import { useSocketIo } from "../../actions/posts";
+import { useStateContext } from "../../context/ContextProvider";
 
 const Display = ({ setCurrentId }) => {
   useSocketIo();
-  const user = JSON.parse(localStorage.getItem("profile"));
+  const { loggedInUser } = useStateContext();
   const { profile, allUsers } = useSelector((state) => state.authReducer);
   const allPosts = useSelector(selectAllPosts);
   const isLoading = useSelector(postIsLoading);
@@ -24,12 +25,12 @@ const Display = ({ setCurrentId }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const name = `${user?.result.firstName} ${user?.result.lastName}`;
+  const name = `${loggedInUser?.result.firstName} ${loggedInUser?.result.lastName}`;
 
-  const creator = user?.result._id;
+  const creator = loggedInUser?.result._id;
 
   const viewProfile = () => {
-    navigate(`/profile?name=${name}&creator=${user?.result?._id}`);
+    navigate(`/profile?name=${name}&creator=${loggedInUser?.result?._id}`);
   };
   const location = useLocation();
 
@@ -52,10 +53,10 @@ const Display = ({ setCurrentId }) => {
   return (
     <div className="Post-container">
       <div className="left-panel">
-        {user?.result && (
+        {loggedInUser?.result && (
           <div>
             <div className="image-name-wrapper" onClick={viewProfile}>
-              <img src={user?.result.profilePics} alt="" />
+              <img src={loggedInUser?.result.profilePics} alt="" />
 
               <div className="username">{name}</div>
             </div>
